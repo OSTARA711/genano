@@ -79,3 +79,4 @@ core
 /m4/.gitignore
 /m4/gnulib-cache.m4
 /snippet/
+config.log.save
