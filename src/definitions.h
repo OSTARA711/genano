@@ -29,22 +29,7 @@
 #endif
 #endif
 
-#if defined(__HAIKU__) && !defined(_DEFAULT_SOURCE)
-#define _DEFAULT_SOURCE  1
-#endif
-
-#ifdef __TANDEM
-/* Tandem NonStop Kernel support. */
-#include <floss.h>
-#define ROOT_UID  65535
-#else
 #define ROOT_UID  0
-#endif
-
-#if defined(__APPLE__) && !defined(st_atim)
-#define st_atim  st_atimespec
-#define st_mtim  st_mtimespec
-#endif
 
 #ifdef HAVE_LIMITS_H
 #include <limits.h>
