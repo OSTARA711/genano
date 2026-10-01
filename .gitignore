@@ -27,6 +27,7 @@ core
 /config.h
 /config.h.in
 /config.log
+/config.log.save
 /config.rpath
 /config.status
 /config.sub
@@ -38,7 +39,7 @@ core
 /mkinstalldirs
 /stamp-h1
 
-# Gettext m4 files:
+# Gettext m4 files (remove this block when i18n is removed):
 /m4/codeset.m4
 /m4/extern-inline.m4
 /m4/fcntl-o.m4
@@ -79,4 +80,16 @@ core
 /m4/.gitignore
 /m4/gnulib-cache.m4
 /snippet/
-config.log.save
+
+# Added for the custom build:
+/COPYING
+/configure~
+/config.h.in~
+*.gmo
+*.a
+*.log
+
+# Editor / tooling (clangd, bear, etc.):
+compile_commands.json
+.cache/
+EOF
