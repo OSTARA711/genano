@@ -1,4 +1,4 @@
-AUTOMAKE_OPTIONS = gnu no-dependencies
+AUTOMAKE_OPTIONS = foreign no-dependencies
 
 SUBDIRS = doc lib m4 po src
 
