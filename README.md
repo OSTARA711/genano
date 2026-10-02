@@ -1,3 +1,22 @@
+          GEN, a powerfull editor, inspired by GNU nano
+          
+History
+
+    Compound word **genano** means “born of nano”, with command **gen**
+    This repository displays a full customisation of nano for Linux,
+    without any internationalisation (the code editor in English US).
+    
+    *gen* is an Old Welsh and Medieval Breton word associated with
+    “family, birth, origin, born of”, ultimately related to the
+    reconstructed Proto-Celtic word *genos*, “kin, family, birth”.
+    The word also naturally evokes *genesis* and *genetics*, and
+    both cognates are seemingly connected to the historically and
+    broader Indo-European root concerning birth and (re)generation.
+
+
+    The original content of the nano README file is displayed below:
+    ---------------------------------------------------------------
+
 
           GNU nano -- a simple editor, inspired by Pico
 

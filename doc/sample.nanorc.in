@@ -29,7 +29,7 @@
 ## Automatically indent a newly created line to the same number of
 ## tabs and/or spaces as the preceding line -- or as the next line
 ## if the preceding line is the beginning of a paragraph.
-# set autoindent
+set autoindent
 
 ## Back up files to the current filename plus a tilde.
 # set backup
@@ -56,7 +56,7 @@
 
 ## Interpret digits after a colon after a filename (on the command line)
 ## as the line number to go to in that file.
-# set colonparsing
+set colonparsing
 
 ## Constantly report the cursor position, in the status bar or minibar.
 # set constantshow
@@ -98,7 +98,7 @@
 ## The opening and closing brackets that are found by a matching-bracket
 ## search.  This may not contain blank characters.  The opening brackets
 ## must come before the closing ones, and they must be in the same order.
-# set matchbrackets "(<[{)>]}"
+set matchbrackets "(<[{)>]}"
 
 ## Suppress the title bar and show the filename plus a cursor-position
 ## percentage in the space of the status bar.
@@ -216,7 +216,7 @@
 
 ## Let an unmodified Backspace or Delete erase the marked region (instead
 ## of a single character, and without affecting the cutbuffer).
-# set zap
+set zap
 
 ## Hide the bars plus help lines and use the whole terminal as edit area.
 # set zero
@@ -254,7 +254,7 @@
 ## For all details, see 'man nanorc', section SYNTAX HIGHLIGHTING.
 
 ## To include most of the existing syntax definitions, you can do:
-# include @PKGDATADIR@/*.nanorc
+include @PKGDATADIR@/*.nanorc
 
 ## Or you can select just the ones you need.  For example:
 # include @PKGDATADIR@/html.nanorc
