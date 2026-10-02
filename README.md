@@ -2,9 +2,9 @@
           
 History
 
-    Compound word **genano** means “born of nano”, with command **gen**
+    Compound word *genano* means “born of nano”, with command gen.
     This repository displays a full customisation of nano for Linux,
-    without any internationalisation (the code editor in English US).
+    without any internationalisation (code editor is in English US).
     
     *gen* is an Old Welsh and Medieval Breton word associated with
     “family, birth, origin, born of”, ultimately related to the
