@@ -170,7 +170,7 @@ bool is_cuttable(bool test_cliff)
 #endif
 					)) {
 #ifndef NANO_TINY
-		statusbar(_("Nothing was cut"));
+		statusbar("Nothing was cut");
 		openfile->mark = NULL;
 #endif
 		return FALSE;
@@ -234,7 +234,7 @@ void chop_word(bool forward)
 void chop_previous_word(void)
 {
 	if (openfile->current->prev == NULL && openfile->current_x == 0)
-		statusbar(_("Nothing was cut"));
+		statusbar("Nothing was cut");
 	else
 		chop_word(BACKWARD);
 }
@@ -568,7 +568,7 @@ void cut_till_eof(void)
 				(openfile->current->next == NULL ||
 				(!ISSET(NO_NEWLINES) && openfile->current_x > 0 &&
 				openfile->current->next == openfile->filebot))) {
-		statusbar(_("Nothing was cut"));
+		statusbar("Nothing was cut");
 		return;
 	}
 
@@ -618,7 +618,7 @@ void copy_marked_region(void)
 	refresh_needed = TRUE;
 
 	if (topline == botline && top_x == bot_x) {
-		statusbar(_("Copied nothing"));
+		statusbar("Copied nothing");
 		return;
 	}
 
@@ -672,7 +672,7 @@ void copy_text(void)
 	/* When at the very end of the buffer, there is nothing to do. */
 	if (openfile->current->next == NULL && at_eol && (ISSET(CUT_FROM_CURSOR) ||
 									openfile->current_x == 0 || cutbuffer)) {
-		statusbar(_("Copied nothing"));
+		statusbar("Copied nothing");
 		return;
 	}
 
@@ -737,7 +737,7 @@ void paste_text(void)
 	size_t was_leftedge = 0;
 
 	if (cutbuffer == NULL) {
-		statusline(AHEM, _("Cutbuffer is empty"));
+		statusline(AHEM, "Cutbuffer is empty");
 		return;
 	}
 

@@ -190,18 +190,18 @@ void jot_error(const char *msg, ...)
 	if (startup_problem == NULL) {
 #ifdef ENABLE_NANORC
 		if (nanorc) {
-			snprintf(textbuf, MAXSIZE, _("Mistakes in '%s'"), nanorc);
+			snprintf(textbuf, MAXSIZE, "Mistakes in '%s'", nanorc);
 			startup_problem = copy_of(textbuf);
 		} else
 #endif
-			startup_problem = copy_of(_("Problems with history file"));
+			startup_problem = copy_of("Problems with history file");
 	}
 #ifdef ENABLE_NANORC
 	if (lineno > 0)
-		length = snprintf(textbuf, MAXSIZE, _("Error in %s on line %zu: "), nanorc, lineno);
+		length = snprintf(textbuf, MAXSIZE, "Error in %s on line %zu: ", nanorc, lineno);
 #endif
 	va_start(ap, msg);
-	length += vsnprintf(textbuf + length, MAXSIZE - length, _(msg), ap);
+	length += vsnprintf(textbuf + length, MAXSIZE - length, msg, ap);
 	va_end(ap);
 
 	error->data = nmalloc(length + 1);
@@ -565,7 +565,7 @@ char *parse_argument(char *ptr)
 			last_quote = ptr;
 
 	if (last_quote == NULL) {
-		jot_error(N_("Argument '%s' has an unterminated \""), the_start);
+		jot_error("Argument '%s' has an unterminated \"", the_start);
 		return NULL;
 	}
 
@@ -586,7 +586,7 @@ char *parse_next_regex(char *ptr)
 	char *starting_point = ptr;
 
 	if (*(ptr - 1) != '"') {
-		jot_error(N_("Regex strings must begin and end with a \" character"));
+		jot_error("Regex strings must begin and end with a \" character");
 		return NULL;
 	}
 
@@ -596,12 +596,12 @@ char *parse_next_regex(char *ptr)
 		ptr++;
 
 	if (*ptr == '\0') {
-		jot_error(N_("Regex strings must begin and end with a \" character"));
+		jot_error("Regex strings must begin and end with a \" character");
 		return NULL;
 	}
 
 	if (ptr == starting_point) {
-		jot_error(N_("Empty regex string"));
+		jot_error("Empty regex string");
 		return NULL;
 	}
 
@@ -626,7 +626,7 @@ bool compile(const char *expression, int rex_flags, regex_t **packed)
 		char *message = nmalloc(length);
 
 		regerror(outcome, compiled, message, length);
-		jot_error(N_("Bad regex \"%s\": %s"), expression, message);
+		jot_error("Bad regex \"%s\": %s", expression, message);
 		free(message);
 
 		regfree(compiled);
@@ -646,7 +646,7 @@ void begin_new_syntax(char *ptr)
 	/* Check that the syntax name is not empty. */
 	if (*ptr == '\0' || (*ptr == '"' &&
 						(*(ptr + 1) == '\0' || *(ptr + 1) == '"'))) {
-		jot_error(N_("Missing syntax name"));
+		jot_error("Missing syntax name");
 		return;
 	}
 
@@ -654,7 +654,7 @@ void begin_new_syntax(char *ptr)
 
 	/* Check that quotes around the name are either paired or absent. */
 	if ((*nameptr == '\x22') ^ (nameptr[strlen(nameptr) - 1] == '\x22')) {
-		jot_error(N_("Unpaired quote in syntax name"));
+		jot_error("Unpaired quote in syntax name");
 		return;
 	}
 
@@ -666,7 +666,7 @@ void begin_new_syntax(char *ptr)
 
 	/* Redefining the "none" syntax is not allowed. */
 	if (strcmp(nameptr, "none") == 0) {
-		jot_error(N_("The \"none\" syntax is reserved"));
+		jot_error("The \"none\" syntax is reserved");
 		return;
 	}
 
@@ -697,7 +697,7 @@ void begin_new_syntax(char *ptr)
 
 	/* The default syntax should have no associated extensions. */
 	if (*ptr && strcmp(live_syntax->name, "default") == 0) {
-		jot_error(N_("The \"default\" syntax does not accept extensions"));
+		jot_error("The \"default\" syntax does not accept extensions");
 		return;
 	}
 
@@ -715,7 +715,7 @@ void check_for_nonempty_syntax(void)
 		size_t current_lineno = lineno;
 
 		lineno = live_syntax->lineno;
-		jot_error(N_("Syntax \"%s\" has no color commands"), live_syntax->name);
+		jot_error("Syntax \"%s\" has no color commands", live_syntax->name);
 		lineno = current_lineno;
 	}
 
@@ -748,7 +748,7 @@ void parse_binding(char *ptr, bool dobind)
 	check_for_nonempty_syntax();
 
 	if (*ptr == '\0') {
-		jot_error(N_("Missing key name"));
+		jot_error("Missing key name");
 		return;
 	}
 
@@ -765,14 +765,14 @@ void parse_binding(char *ptr, bool dobind)
 
 	/* Verify that the key name is not too short. */
 	if (keycopy[1] == '\0' || (keycopy[0] == 'M' && keycopy[2] == '\0')) {
-		jot_error(N_("Key name %s is invalid"), keycopy);
+		jot_error("Key name %s is invalid", keycopy);
 		goto free_things;
 	}
 
 	keycode = keycode_from_string(keycopy);
 
 	if (keycode < 0) {
-		jot_error(N_("Key name %s is invalid"), keycopy);
+		jot_error("Key name %s is invalid", keycopy);
 		goto free_things;
 	}
 
@@ -781,7 +781,7 @@ void parse_binding(char *ptr, bool dobind)
 		ptr = parse_argument(ptr);
 
 		if (funcptr[0] == '\0') {
-			jot_error(N_("Must specify a function to bind the key to"));
+			jot_error("Must specify a function to bind the key to");
 			goto free_things;
 		} else if (ptr == NULL)
 			goto free_things;
@@ -792,13 +792,13 @@ void parse_binding(char *ptr, bool dobind)
 
 	if (menuptr[0] == '\0') {
 		/* TRANSLATORS: Do not translate the word "all". */
-		jot_error(N_("Must specify a menu (or \"all\") in which to bind/unbind the key"));
+		jot_error("Must specify a menu (or \"all\") in which to bind/unbind the key");
 		goto free_things;
 	}
 
 	menu = name_to_menu(menuptr);
 	if (menu == 0) {
-		jot_error(N_("Unknown menu: %s"), menuptr);
+		jot_error("Unknown menu: %s", menuptr);
 		goto free_things;
 	}
 
@@ -816,7 +816,7 @@ void parse_binding(char *ptr, bool dobind)
 			newsc = strtosc(funcptr);
 
 		if (newsc == NULL) {
-			jot_error(N_("Unknown function: %s"), funcptr);
+			jot_error("Unknown function: %s", funcptr);
 			goto free_things;
 		}
 	}
@@ -855,7 +855,7 @@ void parse_binding(char *ptr, bool dobind)
 
 	if (!menu) {
 		if (!ISSET(RESTRICTED) && !ISSET(VIEW_MODE))
-			jot_error(N_("Function '%s' does not exist in menu '%s'"), funcptr, menuptr);
+			jot_error("Function '%s' does not exist in menu '%s'", funcptr, menuptr);
 		goto free_things;
 	}
 
@@ -865,7 +865,7 @@ void parse_binding(char *ptr, bool dobind)
 
 	/* Disallow rebinding <Esc> (^[). */
 	if (newsc->keycode == ESC_CODE) {
-		jot_error(N_("Keystroke %s may not be rebound"), keycopy);
+		jot_error("Keystroke %s may not be rebound", keycopy);
   free_things:
 		free(keycopy);
 		free(newsc);
@@ -889,8 +889,8 @@ bool is_good_file(char *file)
 	/* If the thing exists, it may be neither a directory nor a device. */
 	if (stat(file, &rcinfo) == 0 && (S_ISDIR(rcinfo.st_mode) ||
 				S_ISCHR(rcinfo.st_mode) || S_ISBLK(rcinfo.st_mode))) {
-		jot_error(S_ISDIR(rcinfo.st_mode) ? N_("'%s' is a directory") :
-										N_("'%s' is a device file"), file);
+		jot_error(S_ISDIR(rcinfo.st_mode) ? "'%s' is a directory" :
+										"'%s' is a device file", file);
 		return FALSE;
 	} else
 		return TRUE;
@@ -913,7 +913,7 @@ void parse_one_include(char *file, syntaxtype *syntax)
 	rcstream = fopen(file, "rb");
 
 	if (rcstream == NULL) {
-		jot_error(N_("Error reading %s: %s"), file, strerror(errno));
+		jot_error("Error reading %s: %s", file, strerror(errno));
 		return;
 	}
 
@@ -947,7 +947,7 @@ void parse_one_include(char *file, syntaxtype *syntax)
 		lineno = extra->lineno;
 
 		if (!parse_syntax_commands(keyword, therest))
-			jot_error(N_("Command \"%s\" not understood"), keyword);
+			jot_error("Command \"%s\" not understood", keyword);
 
 		extra = extra->next;
 	}
@@ -975,7 +975,7 @@ void parse_includes(char *ptr)
 	parse_argument(ptr);
 
 	if (strlen(pattern) > PATH_MAX) {
-		jot_error(N_("Path is too long"));
+		jot_error("Path is too long");
 		return;
 	}
 
@@ -989,7 +989,7 @@ void parse_includes(char *ptr)
 		for (size_t i = 0; i < files.gl_pathc; ++i)
 			parse_one_include(files.gl_pathv[i], NULL);
 	} else if (result != GLOB_NOMATCH)
-		jot_error(N_("Error expanding %s: %s"), pattern, strerror(errno));
+		jot_error("Error expanding %s: %s", pattern, strerror(errno));
 
 	globfree(&files);
 	free(expanded);
@@ -1059,7 +1059,7 @@ short color_to_short(const char *colorname, bool *vivid, bool *thick)
 		unsigned short r, g, b;
 
 		if (*vivid) {
-			jot_error(N_("Color '%s' takes no prefix"), colorname);
+			jot_error("Color '%s' takes no prefix", colorname);
 			return BAD_COLOR;
 		}
 
@@ -1070,7 +1070,7 @@ short color_to_short(const char *colorname, bool *vivid, bool *thick)
 	for (int index = 0; index < COLORCOUNT; index++)
 		if (strcmp(colorname, hues[index]) == 0) {
 			if (index > 7 && *vivid) {
-				jot_error(N_("Color '%s' takes no prefix"), colorname);
+				jot_error("Color '%s' takes no prefix", colorname);
 				return BAD_COLOR;
 			} else if (index > 8 && COLORS < 255)
 				return THE_DEFAULT;
@@ -1078,7 +1078,7 @@ short color_to_short(const char *colorname, bool *vivid, bool *thick)
 				return indices[index];
 		}
 
-	jot_error(N_("Color \"%s\" not understood"), colorname);
+	jot_error("Color \"%s\" not understood", colorname);
 	return BAD_COLOR;
 }
 
@@ -1094,7 +1094,7 @@ bool parse_combination(char *combotext, short *fg, short *bg, int *attributes)
 	if (strncmp(combotext, "bold", 4) == 0) {
 		*attributes |= A_BOLD;
 		if (combotext[4] != ',') {
-			jot_error(N_("An attribute requires a subsequent comma"));
+			jot_error("An attribute requires a subsequent comma");
 			return FALSE;
 		}
 		combotext += 5;
@@ -1105,7 +1105,7 @@ bool parse_combination(char *combotext, short *fg, short *bg, int *attributes)
 		*attributes |= A_ITALIC;
 #endif
 		if (combotext[6] != ',') {
-			jot_error(N_("An attribute requires a subsequent comma"));
+			jot_error("An attribute requires a subsequent comma");
 			return FALSE;
 		}
 		combotext += 7;
@@ -1149,7 +1149,7 @@ void parse_rule(char *ptr, int rex_flags)
 	int attributes;
 
 	if (*ptr == '\0') {
-		jot_error(N_("Missing color name"));
+		jot_error("Missing color name");
 		return;
 	}
 
@@ -1160,7 +1160,7 @@ void parse_rule(char *ptr, int rex_flags)
 		return;
 
 	if (*ptr == '\0') {
-		jot_error(N_("Missing regex string after '%s' command"), "color");
+		jot_error("Missing regex string after '%s' command", "color");
 		return;
 	}
 
@@ -1186,7 +1186,7 @@ void parse_rule(char *ptr, int rex_flags)
 
 		if (expectend) {
 			if (strncmp(ptr, "end=", 4) != 0) {
-				jot_error(N_("\"start=\" requires a corresponding \"end=\""));
+				jot_error("\"start=\" requires a corresponding \"end=\"");
 				regfree(start_rgx);
 				free(start_rgx);
 				return;
@@ -1249,18 +1249,18 @@ void grab_and_store(const char *kind, char *ptr, regexlisttype **storage)
 	const char *regexstring;
 
 	if (!opensyntax) {
-		jot_error(N_("A '%s' command requires a preceding 'syntax' command"), kind);
+		jot_error("A '%s' command requires a preceding 'syntax' command", kind);
 		return;
 	}
 
 	/* The default syntax doesn't take any file matching stuff. */
 	if (*ptr && strcmp(live_syntax->name, "default") == 0) {
-		jot_error(N_("The \"default\" syntax does not accept '%s' regexes"), kind);
+		jot_error("The \"default\" syntax does not accept '%s' regexes", kind);
 		return;
 	}
 
 	if (*ptr == '\0') {
-		jot_error(N_("Missing regex string after '%s' command"), kind);
+		jot_error("Missing regex string after '%s' command", kind);
 		return;
 	}
 
@@ -1302,7 +1302,7 @@ void grab_and_store(const char *kind, char *ptr, regexlisttype **storage)
 void pick_up_name(const char *kind, char *ptr, char **storage)
 {
 	if (*ptr == '\0') {
-		jot_error(N_("Missing argument after '%s'"), kind);
+		jot_error("Missing argument after '%s'", kind);
 		return;
 	}
 
@@ -1312,7 +1312,7 @@ void pick_up_name(const char *kind, char *ptr, char **storage)
 
 		while (*look != '"') {
 			if (--look == ptr) {
-				jot_error(N_("Argument of '%s' lacks closing \""), kind);
+				jot_error("Argument of '%s' lacks closing \"", kind);
 				return;
 			}
 		}
@@ -1362,10 +1362,10 @@ static void check_vitals_mapped(void)
 		for (funcstruct *f = allfuncs; f != NULL; f = f->next) {
 			if (f->func == vitals[v] && (f->menus & inmenus[v])) {
 				if (first_sc_for(inmenus[v], f->func) == NULL) {
-					jot_error(N_("No key is bound to function '%s' in menu '%s'. "
-								" Exiting.\n"), f->tag, menu_to_name(inmenus[v]));
-					die(_("If needed, use nano with the -I option "
-								"to adjust your nanorc settings.\n"));
+					jot_error("No key is bound to function '%s' in menu '%s'. "
+								" Exiting.\n", f->tag, menu_to_name(inmenus[v]));
+					die("If needed, use nano with the -I option "
+								"to adjust your nanorc settings.\n");
 				} else
 					break;
 			}
@@ -1431,7 +1431,7 @@ void parse_rcfile(FILE *rcstream, bool just_syntax, bool intros_only)
 					break;
 
 			if (sntx == NULL) {
-				jot_error(N_("Could not find syntax \"%s\" to extend"), syntaxname);
+				jot_error("Could not find syntax \"%s\" to extend", syntaxname);
 				continue;
 			}
 
@@ -1488,7 +1488,7 @@ void parse_rcfile(FILE *rcstream, bool just_syntax, bool intros_only)
 								strcmp(keyword, "include") == 0 ||
 								strcmp(keyword, "extendsyntax") == 0)) {
 			if (intros_only)
-				jot_error(N_("Command \"%s\" not allowed in included file"), keyword);
+				jot_error("Command \"%s\" not allowed in included file", keyword);
 			else
 				break;
 		} else if (intros_only && (strcmp(keyword, "color") == 0 ||
@@ -1498,7 +1498,7 @@ void parse_rcfile(FILE *rcstream, bool just_syntax, bool intros_only)
 								strcmp(keyword, "linter") == 0 ||
 								strcmp(keyword, "formatter") == 0)) {
 			if (!opensyntax)
-				jot_error(N_("A '%s' command requires a preceding 'syntax' command"), keyword);
+				jot_error("A '%s' command requires a preceding 'syntax' command", keyword);
 			if (strstr("icolor", keyword))
 				seen_color_command = TRUE;
 			continue;
@@ -1517,7 +1517,7 @@ void parse_rcfile(FILE *rcstream, bool just_syntax, bool intros_only)
 		else if (strcmp(keyword, "unbind") == 0)
 			parse_binding(ptr, FALSE);
 		else if (intros_only)
-			jot_error(N_("Command \"%s\" not understood"), keyword);
+			jot_error("Command \"%s\" not understood", keyword);
 
 #ifdef ENABLE_COLOR
 		if (drop_open)
@@ -1529,7 +1529,7 @@ void parse_rcfile(FILE *rcstream, bool just_syntax, bool intros_only)
 		check_for_nonempty_syntax();
 
 		if (*ptr == '\0') {
-			jot_error(N_("Missing option"));
+			jot_error("Missing option");
 			continue;
 		}
 
@@ -1543,7 +1543,7 @@ void parse_rcfile(FILE *rcstream, bool just_syntax, bool intros_only)
 		}
 
 		if (rcopts[i].name == NULL) {
-			jot_error(N_("Unknown option: %s"), option);
+			jot_error("Unknown option: %s", option);
 			continue;
 		}
 
@@ -1558,12 +1558,12 @@ void parse_rcfile(FILE *rcstream, bool just_syntax, bool intros_only)
 
 		/* An option that takes an argument cannot be unset. */
 		if (set == -1) {
-			jot_error(N_("Cannot unset option \"%s\""), option);
+			jot_error("Cannot unset option \"%s\"", option);
 			continue;
 		}
 
 		if (*ptr == '\0') {
-			jot_error(N_("Option \"%s\" requires an argument"), option);
+			jot_error("Option \"%s\" requires an argument", option);
 			continue;
 		}
 
@@ -1575,7 +1575,7 @@ void parse_rcfile(FILE *rcstream, bool just_syntax, bool intros_only)
 #ifdef ENABLE_UTF8
 		/* When in a UTF-8 locale, ignore arguments with invalid sequences. */
 		if (using_utf8 && mbstowcs(NULL, argument, 0) == (size_t)-1) {
-			jot_error(N_("Argument is not a valid multibyte string"));
+			jot_error("Argument is not a valid multibyte string");
 			continue;
 		}
 #endif
@@ -1614,7 +1614,7 @@ void parse_rcfile(FILE *rcstream, bool just_syntax, bool intros_only)
 #ifdef ENABLED_WRAPORJUSTIFY
 		if (strcmp(option, "fill") == 0) {
 			if (!parse_num(argument, &fill)) {
-				jot_error(N_("Requested fill size \"%s\" is invalid"), argument);
+				jot_error("Requested fill size \"%s\" is invalid", argument);
 				fill = -COLUMNS_FROM_EOL;
 			}
 		} else
@@ -1622,14 +1622,14 @@ void parse_rcfile(FILE *rcstream, bool just_syntax, bool intros_only)
 #ifndef NANO_TINY
 		if (strcmp(option, "matchbrackets") == 0) {
 			if (has_blank_char(argument))
-				jot_error(N_("Non-blank characters required"));
+				jot_error("Non-blank characters required");
 			else if (mbstrlen(argument) % 2 != 0)
-				jot_error(N_("Even number of characters required"));
+				jot_error("Even number of characters required");
 			else
 				matchbrackets = mallocstrcpy(matchbrackets, argument);
 		} else if (strcmp(option, "whitespace") == 0) {
 			if (mbstrlen(argument) != 2 || breadth(argument) != 2)
-				jot_error(N_("Two single-column characters required"));
+				jot_error("Two single-column characters required");
 			else {
 				whitespace = mallocstrcpy(whitespace, argument);
 				whitelen[0] = char_length(whitespace);
@@ -1640,12 +1640,12 @@ void parse_rcfile(FILE *rcstream, bool just_syntax, bool intros_only)
 #ifdef ENABLE_JUSTIFY
 		if (strcmp(option, "punct") == 0) {
 			if (has_blank_char(argument))
-				jot_error(N_("Non-blank characters required"));
+				jot_error("Non-blank characters required");
 			else
 				punct = mallocstrcpy(punct, argument);
 		} else if (strcmp(option, "brackets") == 0) {
 			if (has_blank_char(argument))
-				jot_error(N_("Non-blank characters required"));
+				jot_error("Non-blank characters required");
 			else
 				brackets = mallocstrcpy(brackets, argument);
 		} else if (strcmp(option, "quotestr") == 0)
@@ -1664,12 +1664,12 @@ void parse_rcfile(FILE *rcstream, bool just_syntax, bool intros_only)
 			word_chars = mallocstrcpy(word_chars, argument);
 		else if (strcmp(option, "guidestripe") == 0) {
 			if (!parse_num(argument, &stripe_column) || stripe_column <= 0) {
-				jot_error(N_("Guide column \"%s\" is invalid"), argument);
+				jot_error("Guide column \"%s\" is invalid", argument);
 				stripe_column = 0;
 			}
 		} else if (strcmp(option, "tabsize") == 0) {
 			if (!parse_num(argument, &tabsize) || tabsize <= 0) {
-				jot_error(N_("Requested tab size \"%s\" is invalid"), argument);
+				jot_error("Requested tab size \"%s\" is invalid", argument);
 				tabsize = -1;
 			}
 		}
@@ -1698,7 +1698,7 @@ void parse_one_nanorc(void)
 	if (rcstream)
 		parse_rcfile(rcstream, FALSE, TRUE);
 	else if (errno != ENOENT)
-		jot_error(N_("Error reading %s: %s"), nanorc, strerror(errno));
+		jot_error("Error reading %s: %s", nanorc, strerror(errno));
 }
 
 /* Return TRUE when path-plus-name denotes a readable, normal file. */
@@ -1720,7 +1720,7 @@ void do_rcfiles(void)
 	if (custom_nanorc) {
 		nanorc = get_full_path(custom_nanorc);
 		if (nanorc == NULL || access(nanorc, F_OK) < 0)
-			die(_("Specified rcfile does not exist\n"));
+			die("Specified rcfile does not exist\n");
 		if (is_good_file(nanorc))
 			parse_one_nanorc();
 	} else {
@@ -1739,7 +1739,7 @@ void do_rcfiles(void)
 					have_nanorc(homedir, "/.config/nano/" RCFILE_NAME))
 			parse_one_nanorc();
 		else if (homedir == NULL && xdgconfdir == NULL)
-			jot_error(N_("I can't find my home directory!  Wah!"));
+			jot_error("I can't find my home directory!  Wah!");
 	}
 
 	check_vitals_mapped();

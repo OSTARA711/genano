@@ -285,7 +285,7 @@ void *nmalloc(size_t howmuch)
 	void *section = malloc(howmuch);
 
 	if (section == NULL)
-		die(_("Nano is out of memory!\n"));
+		die("Nano is out of memory!\n");
 
 	return section;
 }
@@ -296,7 +296,7 @@ void *nrealloc(void *section, size_t howmuch)
 	section = realloc(section, howmuch);
 
 	if (section == NULL)
-		die(_("Nano is out of memory!\n"));
+		die("Nano is out of memory!\n");
 
 	return section;
 }

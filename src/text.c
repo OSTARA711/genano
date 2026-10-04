@@ -40,10 +40,10 @@ void do_mark(void)
 		openfile->mark = openfile->current;
 		openfile->mark_x = openfile->current_x;
 		openfile->softmark = FALSE;
-		statusbar(_("Mark Set"));
+		statusbar("Mark Set");
 	} else {
 		openfile->mark = NULL;
-		statusbar(_("Mark Unset"));
+		statusbar("Mark Unset");
 		refresh_needed = TRUE;
 	}
 }
@@ -373,7 +373,7 @@ void do_comment(void)
 		comment_seq = openfile->syntax->comment;
 
 	if (*comment_seq == '\0') {
-		statusline(AHEM, _("Commenting is not supported for this file type"));
+		statusline(AHEM, "Commenting is not supported for this file type");
 		return;
 	}
 #endif
@@ -383,7 +383,7 @@ void do_comment(void)
 
 	/* If only the magic line is selected, don't do anything. */
 	if (top == bot && bot == openfile->filebot && !ISSET(NO_NEWLINES)) {
-		statusline(AHEM, _("Cannot comment past end of file"));
+		statusline(AHEM, "Cannot comment past end of file");
 		return;
 	}
 
@@ -503,7 +503,7 @@ void do_undo(void)
 	char *data;
 
 	if (u == NULL) {
-		statusline(AHEM, _("Nothing to undo"));
+		statusline(AHEM, "Nothing to undo");
 		return;
 	}
 
@@ -514,7 +514,7 @@ void do_undo(void)
 	case ADD:
 		/* TRANSLATORS: The next thirteen strings describe actions
 		 * that are undone or redone.  They are all nouns, not verbs. */
-		undidmsg = _("addition");
+		undidmsg = "addition";
 		if ((u->xflags & INCLUDED_LAST_LINE) && !ISSET(NO_NEWLINES))
 			remove_magicline();
 		memmove(line->data + u->head_x, line->data + u->head_x + strlen(u->strdata),
@@ -522,7 +522,7 @@ void do_undo(void)
 		goto_line_posx(u->head_lineno, u->head_x);
 		break;
 	case ENTER:
-		undidmsg = _("line break");
+		undidmsg = "line break";
 		/* An <Enter> at the end of leading whitespace while autoindenting has
 		 * deleted the whitespace, and stored an x position of zero.  In that
 		 * case, adjust the positions to return to and to scoop data from. */
@@ -539,7 +539,7 @@ void do_undo(void)
 		break;
 	case BACK:
 	case DEL:
-		undidmsg = _("deletion");
+		undidmsg = "deletion";
 		data = nmalloc(strlen(line->data) + strlen(u->strdata) + 1);
 		strncpy(data, line->data, u->head_x);
 		strcpy(&data[u->head_x], u->strdata);
@@ -549,7 +549,7 @@ void do_undo(void)
 		goto_line_posx(u->tail_lineno, u->tail_x);
 		break;
 	case JOIN:
-		undidmsg = _("line join");
+		undidmsg = "line join";
 		/* When the join was done by a Backspace at the tail of the file,
 		 * and the nonewlines flag isn't set, do not re-add a newline that
 		 * wasn't actually deleted; just position the cursor. */
@@ -566,7 +566,7 @@ void do_undo(void)
 		goto_line_posx(u->head_lineno, u->head_x);
 		break;
 	case REPLACE:
-		undidmsg = _("replacement");
+		undidmsg = "replacement";
 		data = u->strdata;
 		u->strdata = line->data;
 		line->data = data;
@@ -574,7 +574,7 @@ void do_undo(void)
 		break;
 #ifdef ENABLE_WRAPPING
 	case SPLIT_BEGIN:
-		undidmsg = _("addition");
+		undidmsg = "addition";
 		break;
 	case SPLIT_END:
 		openfile->current_undo = openfile->current_undo->next;
@@ -584,24 +584,24 @@ void do_undo(void)
 		break;
 #endif
 	case ZAP:
-		undidmsg = _("erasure");
+		undidmsg = "erasure";
 		undo_cut(u);
 		break;
 	case CUT_TO_EOF:
 	case CUT:
 		/* TRANSLATORS: Remember: these are nouns, NOT verbs. */
-		undidmsg = _("cut");
+		undidmsg = "cut";
 		undo_cut(u);
 		break;
 	case PASTE:
-		undidmsg = _("paste");
+		undidmsg = "paste";
 		undo_paste(u);
 		if ((u->xflags & INCLUDED_LAST_LINE) && !ISSET(NO_NEWLINES) &&
 							openfile->filebot != openfile->current)
 			remove_magicline();
 		break;
 	case INSERT:
-		undidmsg = _("insertion");
+		undidmsg = "insertion";
 		oldcutbuffer = cutbuffer;
 		cutbuffer = NULL;
 		goto_line_posx(u->head_lineno, u->head_x);
@@ -630,20 +630,20 @@ void do_undo(void)
 		return;
 	case INDENT:
 		handle_indent_action(u, TRUE, TRUE);
-		undidmsg = _("indent");
+		undidmsg = "indent";
 		break;
 	case UNINDENT:
 		handle_indent_action(u, TRUE, FALSE);
-		undidmsg = _("unindent");
+		undidmsg = "unindent";
 		break;
 #ifdef ENABLE_COMMENT
 	case COMMENT:
 		handle_comment_action(u, TRUE, TRUE);
-		undidmsg = _("comment");
+		undidmsg = "comment";
 		break;
 	case UNCOMMENT:
 		handle_comment_action(u, TRUE, FALSE);
-		undidmsg = _("uncomment");
+		undidmsg = "uncomment";
 		break;
 #endif
 	default:
@@ -651,7 +651,7 @@ void do_undo(void)
 	}
 
 	if (undidmsg && !ISSET(ZERO) && !pletion_line)
-		statusline(HUSH, _("Undid %s"), undidmsg);
+		statusline(HUSH, "Undid %s", undidmsg);
 
 	openfile->current_undo = openfile->current_undo->next;
 	openfile->last_action = OTHER;
@@ -686,7 +686,7 @@ void do_redo(void)
 	char *data;
 
 	if (u == NULL || u == openfile->current_undo) {
-		statusline(AHEM, _("Nothing to redo"));
+		statusline(AHEM, "Nothing to redo");
 		return;
 	}
 
@@ -699,7 +699,7 @@ void do_redo(void)
 
 	switch (u->type) {
 	case ADD:
-		redidmsg = _("addition");
+		redidmsg = "addition";
 		if ((u->xflags & INCLUDED_LAST_LINE) && !ISSET(NO_NEWLINES))
 			new_magicline();
 		data = nmalloc(strlen(line->data) + strlen(u->strdata) + 1);
@@ -711,7 +711,7 @@ void do_redo(void)
 		goto_line_posx(u->tail_lineno, u->tail_x);
 		break;
 	case ENTER:
-		redidmsg = _("line break");
+		redidmsg = "line break";
 		line->data[u->head_x] = '\0';
 		intruder = make_new_node(line);
 		intruder->data = copy_of(u->strdata);
@@ -721,13 +721,13 @@ void do_redo(void)
 		break;
 	case BACK:
 	case DEL:
-		redidmsg = _("deletion");
+		redidmsg = "deletion";
 		memmove(line->data + u->head_x, line->data + u->head_x + strlen(u->strdata),
 						strlen(line->data + u->head_x) - strlen(u->strdata) + 1);
 		goto_line_posx(u->head_lineno, u->head_x);
 		break;
 	case JOIN:
-		redidmsg = _("line join");
+		redidmsg = "line join";
 		/* When the join was done by a Backspace at the tail of the file,
 		 * and the nonewlines flag isn't set, do not join anything, as
 		 * nothing was actually deleted; just position the cursor. */
@@ -743,7 +743,7 @@ void do_redo(void)
 		goto_line_posx(u->tail_lineno, u->tail_x);
 		break;
 	case REPLACE:
-		redidmsg = _("replacement");
+		redidmsg = "replacement";
 		data = u->strdata;
 		u->strdata = line->data;
 		line->data = data;
@@ -759,24 +759,24 @@ void do_redo(void)
 		ensure_firstcolumn_is_aligned();
 		break;
 	case SPLIT_END:
-		redidmsg = _("addition");
+		redidmsg = "addition";
 		break;
 #endif
 	case ZAP:
-		redidmsg = _("erasure");
+		redidmsg = "erasure";
 		redo_cut(u);
 		break;
 	case CUT_TO_EOF:
 	case CUT:
-		redidmsg = _("cut");
+		redidmsg = "cut";
 		redo_cut(u);
 		break;
 	case PASTE:
-		redidmsg = _("paste");
+		redidmsg = "paste";
 		redo_paste(u);
 		break;
 	case INSERT:
-		redidmsg = _("insertion");
+		redidmsg = "insertion";
 		goto_line_posx(u->head_lineno, u->head_x);
 		if (u->cutbuffer)
 			copy_from_buffer(u->cutbuffer);
@@ -799,20 +799,20 @@ void do_redo(void)
 		break;
 	case INDENT:
 		handle_indent_action(u, FALSE, TRUE);
-		redidmsg = _("indent");
+		redidmsg = "indent";
 		break;
 	case UNINDENT:
 		handle_indent_action(u, FALSE, FALSE);
-		redidmsg = _("unindent");
+		redidmsg = "unindent";
 		break;
 #ifdef ENABLE_COMMENT
 	case COMMENT:
 		handle_comment_action(u, FALSE, TRUE);
-		redidmsg = _("comment");
+		redidmsg = "comment";
 		break;
 	case UNCOMMENT:
 		handle_comment_action(u, FALSE, FALSE);
-		redidmsg = _("uncomment");
+		redidmsg = "uncomment";
 		break;
 #endif
 	default:
@@ -820,7 +820,7 @@ void do_redo(void)
 	}
 
 	if (redidmsg && !ISSET(ZERO))
-		statusline(HUSH, _("Redid %s"), redidmsg);
+		statusline(HUSH, "Redid %s", redidmsg);
 
 	openfile->current_undo = u;
 	openfile->last_action = OTHER;
@@ -1074,7 +1074,7 @@ void add_undo(undo_type action, const char *message)
 		u->tail_lineno = openfile->cursor_row;
 		/* Fall-through. */
 	case COUPLE_END:
-		u->strdata = copy_of(_(message));
+		u->strdata = copy_of(message);
 		break;
 	case INDENT:
 	case UNINDENT:
@@ -1779,7 +1779,7 @@ void justify_text(bool whole_buffer)
 	bool marked_backward = (openfile->mark && !mark_is_before_cursor());
 
 	/* TRANSLATORS: This one goes with Undid/Redid messages. */
-	add_undo(COUPLE_BEGIN, N_("justification"));
+	add_undo(COUPLE_BEGIN, "justification");
 
 	/* If the mark is on, do as Pico: treat all marked text as one paragraph. */
 	if (openfile->mark) {
@@ -1790,7 +1790,7 @@ void justify_text(bool whole_buffer)
 
 		/* When the marked region is empty, do nothing. */
 		if (startline == endline && start_x == end_x) {
-			statusline(AHEM, _("Selection is empty"));
+			statusline(AHEM, "Selection is empty");
 			discard_until(openfile->undotop->next);
 			return;
 		}
@@ -1999,17 +1999,17 @@ void justify_text(bool whole_buffer)
 	} else if (whole_buffer && !openfile->mark)
 		goto_line_posx(was_the_linenumber, 0);
 
-	add_undo(COUPLE_END, N_("justification"));
+	add_undo(COUPLE_END, "justification");
 
 	/* Report on the status bar what we justified. */
 	if (openfile->mark)
-		statusline(REMARK, _("Justified selection"));
+		statusline(REMARK, "Justified selection");
 	else
 #endif
 	if (whole_buffer)
-		statusline(REMARK, _("Justified file"));
+		statusline(REMARK, "Justified file");
 	else
-		statusbar(_("Justified paragraph"));
+		statusbar("Justified paragraph");
 
 	/* We're done justifying.  Restore the cutbuffer. */
 	cutbuffer = was_cutbuffer;
@@ -2128,10 +2128,10 @@ void treat(char *tempfile_name, char *theprogram, bool spelling)
 		if (fileinfo.st_size == 0) {
 #ifndef NANO_TINY
 			if (spelling && openfile->mark)
-				statusline(AHEM, _("Selection is empty"));
+				statusline(AHEM, "Selection is empty");
 			else
 #endif
-				statusline(AHEM, _("Buffer is empty"));
+				statusline(AHEM, "Buffer is empty");
 			return;
 		}
 
@@ -2143,7 +2143,7 @@ void treat(char *tempfile_name, char *theprogram, bool spelling)
 	if (spelling)
 		endwin();
 	else
-		statusbar(_("Invoking formatter..."));
+		statusbar("Invoking formatter...");
 
 	construct_argument_list(&arguments, theprogram, tempfile_name);
 
@@ -2176,15 +2176,15 @@ void treat(char *tempfile_name, char *theprogram, bool spelling)
 		full_refresh();
 
 	if (thepid < 0) {
-		statusline(ALERT, _("Could not fork: %s"), strerror(errornumber));
+		statusline(ALERT, "Could not fork: %s", strerror(errornumber));
 		free(arguments[0]);
 		return;
 	} else if (!WIFEXITED(program_status) || WEXITSTATUS(program_status) > 2) {
-		statusline(ALERT, _("Error invoking '%s'"), arguments[0]);
+		statusline(ALERT, "Error invoking '%s'", arguments[0]);
 		free(arguments[0]);
 		return;
 	} else if (WEXITSTATUS(program_status) != 0)
-		statusline(ALERT, _("Program '%s' complained"), arguments[0]);
+		statusline(ALERT, "Program '%s' complained", arguments[0]);
 
 	free(arguments[0]);
 
@@ -2192,7 +2192,7 @@ void treat(char *tempfile_name, char *theprogram, bool spelling)
 	if (timestamp_sec > 0 && stat(tempfile_name, &fileinfo) == 0 &&
 					(long)fileinfo.st_mtim.tv_sec == timestamp_sec &&
 					(long)fileinfo.st_mtim.tv_nsec == timestamp_nsec) {
-		statusline(REMARK, _("Nothing changed"));
+		statusline(REMARK, "Nothing changed");
 		return;
 	}
 
@@ -2217,7 +2217,7 @@ void treat(char *tempfile_name, char *theprogram, bool spelling)
 #endif
 		replaced = replace_buffer(tempfile_name, CUT_TO_EOF,
 					/* TRANSLATORS: The next two go with Undid/Redid messages. */
-					(spelling ? N_("spelling correction") : N_("formatting")));
+					(spelling ? "spelling correction" : "formatting"));
 
 	/* Go back to the old position. */
 	goto_line_posx(was_lineno, was_x);
@@ -2235,9 +2235,9 @@ void treat(char *tempfile_name, char *theprogram, bool spelling)
 	adjust_viewport(STATIONARY);
 
 	if (spelling)
-		statusline(REMARK, _("Finished checking spelling"));
+		statusline(REMARK, "Finished checking spelling");
 	else
-		statusline(REMARK, _("Buffer has been processed"));
+		statusline(REMARK, "Buffer has been processed");
 #endif
 }
 #endif /* ENABLE_SPELLER || ENABLE_FORMATTER */
@@ -2281,7 +2281,7 @@ bool fix_spello(const char *word)
 
 	/* If the word isn't found, alert the user; if it is, allow correction. */
 	if (result == 0) {
-		statusline(ALERT, _("Unfindable word: %s"), word);
+		statusline(ALERT, "Unfindable word: %s", word);
 		lastmessage = VACUUM;
 		proceed = TRUE;
 		napms(2800);
@@ -2300,7 +2300,7 @@ bool fix_spello(const char *word)
 		/* Let the user supply a correctly spelled alternative. */
 		proceed = (do_prompt(MSPELL, word, NULL, edit_refresh,
 								/* TRANSLATORS: This is a prompt. */
-								_("Edit a replacement")) != -1);
+								"Edit a replacement") != -1);
 
 		spotlighted = FALSE;
 
@@ -2313,7 +2313,7 @@ bool fix_spello(const char *word)
 			do_replace_loop(word, TRUE, was_current, &was_x);
 
 			/* TRANSLATORS: Shown after fixing misspellings in one word. */
-			statusbar(_("Next word..."));
+			statusbar("Next word...");
 			napms(400);
 		}
 	}
@@ -2362,11 +2362,11 @@ void spell_check(const char *tempfile_name)
 
 	/* Create all three pipes up front. */
 	if (pipe(spell_fd) < 0 || pipe(sort_fd) < 0 || pipe(uniq_fd) < 0) {
-		statusline(ALERT, _("Could not create pipe: %s"), strerror(errno));
+		statusline(ALERT, "Could not create pipe: %s", strerror(errno));
 		return;
 	}
 
-	statusbar(_("Invoking spell checker..."));
+	statusbar("Invoking spell checker...");
 
 	/* Fork a process to run spell in. */
 	if ((pid_spell = fork()) == 0) {
@@ -2442,7 +2442,7 @@ void spell_check(const char *tempfile_name)
 
 	/* When some child process was not forked successfully... */
 	if (pid_spell < 0 || pid_sort < 0 || pid_uniq < 0) {
-		statusline(ALERT, _("Could not fork: %s"), strerror(errno));
+		statusline(ALERT, "Could not fork: %s", strerror(errno));
 		close(uniq_fd[0]);
 		return;
 	}
@@ -2451,7 +2451,7 @@ void spell_check(const char *tempfile_name)
 	pipesize = fpathconf(uniq_fd[0], _PC_PIPE_BUF);
 
 	if (pipesize < 1) {
-		statusline(ALERT, _("Could not get size of pipe buffer"));
+		statusline(ALERT, "Could not get size of pipe buffer");
 		close(uniq_fd[0]);
 		return;
 	}
@@ -2531,15 +2531,15 @@ void spell_check(const char *tempfile_name)
 	waitpid(pid_uniq, &uniq_status, 0);
 
 	if (!WIFEXITED(uniq_status) || WEXITSTATUS(uniq_status))
-		statusline(ALERT, _("Error invoking '%s'"), "uniq");
+		statusline(ALERT, "Error invoking '%s'", "uniq");
 	else if (!WIFEXITED(sort_status) || WEXITSTATUS(sort_status))
-		statusline(ALERT, _("Error invoking '%s'"), "sort");
+		statusline(ALERT, "Error invoking '%s'", "sort");
 	else if (!WIFEXITED(spell_status) || WEXITSTATUS(spell_status))
-		statusline(ALERT, _("Error invoking '%s'"), "spell");
+		statusline(ALERT, "Error invoking '%s'", "spell");
 	else if (bytesread < 0)
-		statusline(ALERT, _("Error reading pipe: %s"), strerror(errornumber));
+		statusline(ALERT, "Error reading pipe: %s", strerror(errornumber));
 	else
-		statusline(REMARK, _("Finished checking spelling"));
+		statusline(REMARK, "Finished checking spelling");
 #endif
 }
 
@@ -2567,7 +2567,7 @@ void do_spell(void)
 		okay = write_file(temp_name, stream, SPECIAL, NONOTES);
 
 	if (!okay) {
-		statusline(ALERT, _("Error writing temp file: %s"), strerror(errno));
+		statusline(ALERT, "Error writing temp file: %s", strerror(errno));
 		unlink(temp_name);
 		free(temp_name);
 		return;
@@ -2626,7 +2626,7 @@ void do_linter(void)
 		return;
 
 	if (!openfile->syntax || !openfile->syntax->linter || !*openfile->syntax->linter) {
-		statusline(AHEM, _("No linter is defined for this type of file"));
+		statusline(AHEM, "No linter is defined for this type of file");
 		return;
 	}
 
@@ -2636,10 +2636,10 @@ void do_linter(void)
 	edit_refresh();
 
 	if (openfile->modified) {
-		int choice = ask_user(YESORNO, _("Save modified buffer before linting?"));
+		int choice = ask_user(YESORNO, "Save modified buffer before linting?");
 
 		if (choice == CANCEL) {
-			statusbar(_("Cancelled"));
+			statusbar("Cancelled");
 			return;
 		} else if (choice == YES && (write_it_out(FALSE, FALSE) != 1))
 			return;
@@ -2647,13 +2647,13 @@ void do_linter(void)
 
 	/* Create a pipe up front. */
 	if (pipe(lint_fd) < 0) {
-		statusline(ALERT, _("Could not create pipe: %s"), strerror(errno));
+		statusline(ALERT, "Could not create pipe: %s", strerror(errno));
 		return;
 	}
 
 	blank_bottombars();
 	currmenu = MLINTER;
-	statusbar(_("Invoking linter..."));
+	statusbar("Invoking linter...");
 
 	/* Fork a process to run the linter in. */
 	if ((pid_lint = fork()) == 0) {
@@ -2682,7 +2682,7 @@ void do_linter(void)
 
 	/* If the child process was not forked successfully... */
 	if (pid_lint < 0) {
-		statusline(ALERT, _("Could not fork: %s"), strerror(errno));
+		statusline(ALERT, "Could not fork: %s", strerror(errno));
 		close(lint_fd[0]);
 		return;
 	}
@@ -2691,7 +2691,7 @@ void do_linter(void)
 	pipesize = fpathconf(lint_fd[0], _PC_PIPE_BUF);
 
 	if (pipesize < 1) {
-		statusline(ALERT, _("Could not get size of pipe buffer"));
+		statusline(ALERT, "Could not get size of pipe buffer");
 		close(lint_fd[0]);
 		return;
 	}
@@ -2786,17 +2786,17 @@ void do_linter(void)
 	waitpid(pid_lint, &lint_status, 0);
 
 	if (!WIFEXITED(lint_status) || WEXITSTATUS(lint_status) > 2) {
-		statusline(ALERT, _("Error invoking '%s'"), openfile->syntax->linter);
+		statusline(ALERT, "Error invoking '%s'", openfile->syntax->linter);
 		for (curlint = lints; curlint != NULL;)
 			curlint = free_one_lint(curlint);
 		return;
 	} else if (bytesread < 0) {
-		statusline(ALERT, _("Error reading pipe: %s"), strerror(errornumber));
+		statusline(ALERT, "Error reading pipe: %s", strerror(errornumber));
 		return;
 	}
 
 	if (!parsesuccess) {
-		statusline(REMARK, _("Got 0 parsable lines from command: %s"), openfile->syntax->linter);
+		statusline(REMARK, "Got 0 parsable lines from command: %s", openfile->syntax->linter);
 		return;
 	}
 
@@ -2834,14 +2834,14 @@ void do_linter(void)
 				char *msg = nmalloc(1024 + strlen(curlint->filename));
 				int choice;
 
-				sprintf(msg, _("This message is for unopened file %s,"
+				sprintf(msg, ("This message is for unopened file %s,"
 							" open it in a new buffer?"), curlint->filename);
 				choice = ask_user(YESORNO, msg);
 				currmenu = MLINTER;
 				free(msg);
 
 				if (choice == CANCEL) {
-					statusbar(_("Cancelled"));
+					statusbar("Cancelled");
 					break;
 				} else if (choice == YES) {
 					open_buffer(curlint->filename, TRUE);
@@ -2869,7 +2869,7 @@ void do_linter(void)
 					free(dontwantfile);
 
 					if (restlint == NULL) {
-						statusline(REMARK, _("No messages for this file"));
+						statusline(REMARK, "No messages for this file");
 						break;
 					} else {
 						curlint = restlint;
@@ -2919,7 +2919,7 @@ void do_linter(void)
 			if (curlint->prev)
 				curlint = curlint->prev;
 			else if (last_wait != time(NULL)) {
-				statusbar(_("At first message"));
+				statusbar("At first message");
 				beep();
 				napms(600);
 				last_wait = time(NULL);
@@ -2929,7 +2929,7 @@ void do_linter(void)
 			if (curlint->next)
 				curlint = curlint->next;
 			else if (last_wait != time(NULL)) {
-				statusbar(_("At last message"));
+				statusbar("At last message");
 				beep();
 				napms(600);
 				last_wait = time(NULL);
@@ -2969,7 +2969,7 @@ void do_formatter(void)
 		return;
 
 	if (!openfile->syntax || !openfile->syntax->formatter || !*openfile->syntax->formatter) {
-		statusline(AHEM, _("No formatter is defined for this type of file"));
+		statusline(AHEM, "No formatter is defined for this type of file");
 		return;
 	}
 
@@ -2983,7 +2983,7 @@ void do_formatter(void)
 		okay = write_file(temp_name, stream, SPECIAL, NONOTES);
 
 	if (!okay)
-		statusline(ALERT, _("Error writing temp file: %s"), strerror(errno));
+		statusline(ALERT, "Error writing temp file: %s", strerror(errno));
 	else
 		treat(temp_name, openfile->syntax->formatter, FALSE);
 
@@ -3044,11 +3044,11 @@ void count_lines_words_and_characters(void)
 	openfile->current_x = was_x;
 
 	/* Report on the status bar the number of lines, words, and characters. */
-	statusline(INFO, _("%s%zd %s,  %zu %s,  %zu %s"),
-						openfile->mark ? _("In Selection:  ") : "",
-						lines, P_("line", "lines", lines),
-						words, P_("word", "words", words),
-						chars, P_("character", "characters", chars));
+	statusline(INFO, "%s%zd %s,  %zu %s,  %zu %s",
+						openfile->mark ? "In Selection:  " : "",
+						lines, (lines == 1 ? "line" : "lines"),
+						words, (words == 1 ? "word" : "words"),
+						chars, (chars == 1 ? "character" : "characters"));
 }
 #endif /* !NANO_TINY */
 
@@ -3066,7 +3066,7 @@ void do_verbatim_input(void)
 	}
 #endif
 	/* TRANSLATORS: Shown when the next keystroke will be inserted verbatim. */
-	statusline(INFO, _("Verbatim Input"));
+	statusline(INFO, "Verbatim Input");
 	place_the_cursor();
 
 	/* Read in the first one or two bytes of the next keystroke. */
@@ -3090,7 +3090,7 @@ void do_verbatim_input(void)
 			wipe_statusbar();
 	} else
 		/* TRANSLATORS: An invalid verbatim Unicode code was typed. */
-		statusline(AHEM, _("Invalid code"));
+		statusline(AHEM, "Invalid code");
 
 	free(bytes);
 }
@@ -3177,7 +3177,7 @@ void complete_a_word(void)
 	/* If there is no word fragment before the cursor, do nothing. */
 	if (start_of_shard == openfile->current_x) {
 		/* TRANSLATORS: Shown when no text is directly left of the cursor. */
-		statusline(AHEM, _("No word fragment"));
+		statusline(AHEM, "No word fragment");
 		pletion_line = NULL;
 		return;
 	}
@@ -3280,10 +3280,10 @@ void complete_a_word(void)
 	/* The search has gone through all buffers. */
 	if (list_of_completions) {
 		edit_refresh();
-		statusline(AHEM, _("No further matches"));
+		statusline(AHEM, "No further matches");
 	} else
 		/* TRANSLATORS: Shown when there are zero possible completions. */
-		statusline(AHEM, _("No matches"));
+		statusline(AHEM, "No matches");
 
 	free(shard);
 }

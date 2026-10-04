@@ -140,4 +140,203 @@ Bug Reports
     (you will need an account to be able to do so), or send an email
     to the nano-devel list (no need to subscribe, but mention it if
     you want to be CC'ed on an answer).
+    
+
+##########################################################################
+
+                                 AUTHORS
+
+Below section lists people who have made significant contributions to the
+nano editor, and it was previously located on a single file named AUTHORS,
+in GNU nano. Please see the ChangeLog for specific changes by author.
+--------------------------------------------------------------------------
+
+
+Chris Allegretta <chrisa@asty.org>
+	* Original program author and long-time maintainer.
+
+Benno Schulenberg <bensberg@telfort.nl>
+	* An array of small bug fixes, the cut-word and block-jump
+	  routines, text selection by holding Shift, macro recording
+	  and replay, extra key bindings, the --indicator, --minibar,
+	  and --zero options, and braced functions in string binds.
+	  Current maintainer.
+
+David Lawrence Ramsey <pooka109@gmail.com>
+	* Multiple-buffer support, operating-dir option (-o), bug fixes
+	  for display routines, wrapping code, spelling fixes, parts of
+	  UTF-8 support, softwrap overhaul, constantshow mode, undoable
+	  indentations, undoable justifications, justifiable regions,
+	  and numerous other fixes.  Former stable-series maintainer.
+
+Jordi Mallach <jordi@gnu.org>
+	* Debian package maintainer, fellow bug squasher, translator
+	  for Catalan.  Former head of internationalization support.
+
+Adam Rogoyski <rogoyski@cs.utexas.edu>
+	* New write_file() function, read_file() optimization, mouse
+	  support, resize support, nohelp (-x) option, justify function,
+	  follow symlink option and bugfixes, and much more.
+
+Robert Siemborski <rjs3@andrew.cmu.edu>
+	* Miscellaneous cut, display, replace, and other bug fixes,
+	  original and new "magic line" code, read_line() function,
+	  new edit display routines.
+
+Rocco Corsi <rocco.corsi@sympatico.ca>
+	* Internal spelling code, many optimizations and bug fixes
+	  for findnextstr() and search-related functions, various
+	  display and file-handling fixes.
+
+David Benbennick <dbenbenn@math.cornell.edu>
+	* Wrap and justify bugfixes/enhancements, new color syntax
+	  code, memleak fixes, parts of the UTF-8 support, and other
+	  miscellaneous fixes.
+
+Mike Frysinger <vapier@gentoo.org>
+	* Whitespace display mode, --enable-utf8/--disable-utf8 configure
+	  options for ncurses, many new color regexes and improvements to
+	  existing ones in syntax/*.nanorc, the move from svn to git, the
+	  conversion to gnulib, and miscellaneous bug fixes.  Former
+	  Gentoo package maintainer.
+
+Mark Majeres <mark@engine12.com>
+	* A functional undo/redo system, and coloring nano's interface.
+
+Mahyar Abbaspour <mahyar.abaspour@gmail.com>
+	* Improved handling of SIGWINCH.
+
+Mike Scalora <mike@scalora.org>
+	* The comment/uncomment feature.
+
+Faissal Bensefia <faissaloo@gmail.com>
+	* Line numbers.
+
+Sumedh Pendurkar <sumedh.pendurkar@gmail.com>
+	* The word-completion feature.
+
+Rishabh Dave <rishabhddave@gmail.com>
+	* Searchable help.
+
+Marco Diego Aurélio Mesquita <marcodiegomesquita@gmail.com>
+	* Filtering text through an external command.
+	* Placing anchors (bookmarks) and jumping to them.
+
+Brand Huntsman <alpha@qzx.com>
+	* The delayed parsing of syntax files.
+
+
+##########################################################################
+
+                               TRANSLATIONS
+
+Below section lists people who have made translations for the nano editor,
+and it was previously located on a single file named THANKS, in GNU nano.
+
+--------------------------------------------------------------------------
+
+Pedro Albuquerque <palbuquerque73@gmail.com>          Portuguese
+Zayed Al-Saidi <zayed.alsaidi@gmail.com>              Arabic
+Josef Andersson <josef.andersson@fripost.org>         Swedish
+Mario Blättermann <mario.blaettermann@gmail.com>      German
+Besnik Bleta <besnik@programeshqip.org>               Albanian
+Laurențiu Buzdugan <buzdugan@voyager.net>             Romanian
+Ricardo Cárdenes Medina <ricardo@conisys.com>         Spanish
+Antonio Ceballos <aceballos@gmail.com>                Spanish
+Wei-Lun CHAO <chaoweilun@pcmail.com.tw>               Chinese (traditional)
+Seong-ho Cho <darkcircle.0426@gmail.com>              Korean
+Yuri Chornoivan <yurchor@ukr.net>                     Ukrainian
+Marco Colombo <magicdice@inwind.it>                   Italian
+Mihai Cristescu <mihai.cristescu@archlinux.info>      Romanian
+Yavor Doganov <yavor@doganov.org>                     Bulgarian
+Karl Eichwalder <keichwa@gmx.net>                     German
+A. Murat EREN <meren@comu.edu.tr>                     Turkish
+Sveinn í Felli <sv1@fellsnet.is>                      Icelandic
+Marek Felšöci <marek@felsoci.sk>                      Slovak
+Doruk Fisek <dfisek@fisek.com.tr>                     Turkish
+Rafael Fontenelle <rffontenelle@gmail.com>            Brazilian Portuguese
+Pavel Fric <pavelfric@seznam.cz>                      Czech
+Jorge González <aloriel@gmail.com>                    Spanish
+Jean-Philippe Guérard <jean-philippe.guerard@laposte.net>  French
+Václav Haisman <V.Haisman@sh.cvut.cz>                 Czech
+Takeshi Hamasaki <hmatrjp@users.sourceforge.jp>       Japanese
+Geir Helland <pjallabais@users.sourceforge.net>       Norwegian Bokmål
+Tedi Heriyanto <tedi_h@gmx.net>                       Indonesian
+Kjetil Torgrim Homme <kjetilho@linpro.no>             Norwegian Nynorsk
+Szabolcs Horvath <horvaths@janus.gimsz.sulinet.hu>    Hungarian
+Jorma Karvonen <karvonen.jorma@gmail.com>             Finnish
+Mehmet Kececi <mkececi@mehmetkececi.com>              Turkish
+Gabor Kelemen <kelemeng@gnome.hu>                     Hungarian
+Kalle Kivimaa <kalle.kivimaa@iki.fi>                  Finnish
+Eivind Kjørstad <ekj@vestdata.no>                     Norwegian Nynorsk
+Florian König <floki@bigfoot.com>                     German
+Klemen Košir <klemen913@gmail.com>                    Slovenian
+Wojciech Kotwica <wkotwica@post.pl>                   Polish
+Clement Laforet <clem_laf@wanadoo.fr>                 French
+Ask Hjorth Larsen <asklarsen@gmail.com>               Danish
+LI Daobing <lidaobing@gmail.com>                      Chinese (simplified)
+Jordi Mallach <jordi@gnu.org>                         Catalan
+João Victor Duarte Martins <jvdm@sdf.lonestar.org>    Brazilian Portuguese
+Pavel Maryanov <acid@jack.kiev.ua>                    Russian
+Daniele Medri <madrid@linux.it>                       Italian
+Baurzhan Muftakhidinov <baurthefirst@gmail.com>       Kazakh
+Gergely Nagy <algernon@debian.org>                    Hungarian
+Claudio Neves <cneves@nextis.com>                     Brazilian Portuguese
+Kalle Olavi Niemitalo <kon@iki.fi>                    Finnish
+Мирослав Николић <miroslavnikolic@rocketmail.com>     Serbian
+Lauri Nurmi <lanurmi@iki.fi>                          Finnish
+Daniel Nylander <po@danielnylander.se>                Swedish
+Mikel Olasagasti <hey_neken@mundurat.net>             Basque
+Yi-Jyun Pan <pan93412@gmail.com>                      Chinese (traditional)
+Michael Piefel <piefel@informatik.hu-berlin.de>       German
+Sergey Poznyakoff <gray@gnu.org>                      Polish
+Božidar Putanec <bozidarp@yahoo.com>                  Croatian
+Trần Ngọc Quân <vnwildman@gmail.com>                  Vietnamese
+Sharuzzaman Ahmat Raslan <sharuzzaman@excite.com>     Malay
+Sergey A. Ribalchenko <fisher@obu.ck.ua>              Ukrainian and Russian
+Michel Robitaille <robitail@IRO.UMontreal.CA>         French
+Christian Rose <menthos@menthos.com>                  Swedish
+Dimitriy Ryazantcev <DJm00n@mail.ru>                  Russian
+Stig E Sandø <stig@ii.uib.no>                         Norwegian Bokmål
+Kevin Patrick Scannell <kscanne@gmail.com>            Irish
+Benno Schulenberg <benno@vertaalt.nl>                 Dutch and Esperanto
+Danilo Segan <dsegan@gmx.net>                         Serbian
+Clytie Siddall <clytie@riverland.net.au>              Vietnamese
+Keld Simonsen <keld@dkuug.dk>                         Danish
+Guus Sliepen <guus@nl.linux.org>                      Dutch
+Cezary Sliwa <sliwa@cft.edu.pl>                       Polish
+Johnny A. Solbu <johnny@solbu.net>                    Norwegian Bokmål
+Pierre Tane <tanep@bigfoot.com>                       French
+Yasuaki Taniguchi <yasuakit@gmail.com>                Japanese
+Jacobo Tarrío <jtarrio@trasno.net>                    Galician
+Andika Triwidada <andika@gmail.com>                   Indonesian
+Francisco Javier Tsao Santín <tsao@members.fsf.org>   Galician
+Balázs Úr <urbalazs@gmail.com>                        Hungarian
+Luca Vercelli <luca.vercelli.to@gmail.com>            Italian
+Miquel Vidal <miquel@sindominio.net>                  Catalan
+Phan Vinh Thinh <teppi82@gmail.com>                   Vietnamese
+Pauli Virtanen <pauli.virtanen@saunalahti.fi>         Finnish
+Aron Xu <happyaron.xu@gmail.com>                      Chinese (simplified)
+Boyuan Yang <073plan@gmail.com>                       Chinese (simplified)
+Peio Ziarsolo <peio@sindominio.net>                   Basque
+Anton Zinoviev <zinoviev@debian.org>                  Bulgarian
+
+
+Other stuff:
+===========
+Ben Armstrong <synrg@sanctuary.nslug.ns.ca>    Negative -r value idea, code
+Thomas Dickey <dickey@herndon4.his.com>        Curses help and advice
+Kamil Dudka <kdudka@redhat.com>                Several small bug fixes
+Sven Guckes <guckes@math.fu-berlin.de>         Advice and advocacy
+Thijs Kinkhorst <thijs@kinkhorst.com>          rnano.1 manpage
+Jim Knoble <jmknoble@pobox.com>                Pico compat for browser
+Ryan Krebs <fluffy@highwire.stanford.edu>      Many bug fixes and testing
+Roy Lanek <lanek@ranahminang.net>              Advice and advocacy
+Chuck Mead <csm@MoonGroup.com>                 Feedback and RPM stuff
+Mike Melanson <melanson@pcisys.net>            Bug reports
+Neil Parks <nparks@acsmail.com>                Bug reports and fixes
+Jeremy Robichaud <robicj@yahoo.com>            Beta tester
+Bill Soudan <wes0472@rit.edu>                  Regex code, etc
+Ken Tyler <kent@werple.net.au>                 Search fixes and more
+
 

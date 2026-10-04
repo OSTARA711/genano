@@ -183,14 +183,14 @@ void browser_refresh(void)
 				info = copy_of("--");
 			else
 				/* TRANSLATORS: Anything more than 7 cells gets clipped. */
-				info = copy_of(_("(dir)"));
+				info = copy_of("(dir)");
 		} else if (S_ISDIR(state.st_mode)) {
 			if (strcmp(thename, "..") == 0) {
 				/* TRANSLATORS: Anything more than 12 cells gets clipped. */
-				info = copy_of(_("(parent dir)"));
+				info = copy_of("(parent dir)");
 				infomaxlen = 12;
 			} else
-				info = copy_of(_("(dir)"));
+				info = copy_of("(dir)");
 		} else {
 			off_t result = state.st_size;
 			char modifier;
@@ -217,7 +217,7 @@ void browser_refresh(void)
 			else
 				/* TRANSLATORS: Anything more than 7 cells gets clipped.
 				 * If necessary, you can leave out the parentheses. */
-				info = mallocstrcpy(info, _("(huge)"));
+				info = mallocstrcpy(info, "(huge)");
 		}
 
 		/* Make sure info takes up no more than infomaxlen columns. */
@@ -266,19 +266,19 @@ void findfile(const char *needle, bool forwards)
 		if (forwards) {
 			if (selected++ == list_length - 1) {
 				selected = 0;
-				statusbar(_("Search Wrapped"));
+				statusbar("Search Wrapped");
 			}
 		} else {
 			if (selected-- == 0) {
 				selected = list_length - 1;
-				statusbar(_("Search Wrapped"));
+				statusbar("Search Wrapped");
 			}
 		}
 
 		/* When the needle occurs in the basename of the file, we have a match. */
 		if (mbstrcasestr(tail(filelist[selected]), needle)) {
 			if (selected == began_at)
-				statusbar(_("This is the only occurrence"));
+				statusbar("This is the only occurrence");
 			return;
 		}
 
@@ -311,15 +311,15 @@ void search_filename(bool forwards)
 
 	/* Now ask what to search for. */
 	response = do_prompt(MWHEREISFILE, "", &search_history,
-						browser_refresh, "%s%s%s", _("Search"),
+						browser_refresh, "%s%s%s", "Search",
 						/* TRANSLATORS: A modifier of the Search prompt. */
-						!forwards ? _(" [Backwards]") : "", thedefault);
+						!forwards ? " [Backwards]" : "", thedefault);
 	free(thedefault);
 
 	/* If the user cancelled, or typed <Enter> on a blank answer and
 	 * nothing was searched for yet during this session, get out. */
 	if (response == -1 || (response == -2 && *last_search == '\0')) {
-		statusbar(_("Cancelled"));
+		statusbar("Cancelled");
 		return;
 	}
 
@@ -346,7 +346,7 @@ void research_filename(bool forwards)
 #endif
 
 	if (*last_search == '\0')
-		statusbar(_("No current search pattern"));
+		statusbar("No current search pattern");
 	else {
 		wipe_statusbar();
 		findfile(last_search, forwards);
@@ -401,7 +401,7 @@ char *browse(char *path)
 		dir = opendir(path);
 
 	if (path == NULL || dir == NULL) {
-		statusline(ALERT, _("Cannot open directory: %s"), strerror(errno));
+		statusline(ALERT, "Cannot open directory: %s", strerror(errno));
 		/* If we don't have a file list, there is nothing to show. */
 		if (filelist == NULL) {
 			lastmessage = VACUUM;
@@ -441,7 +441,7 @@ char *browse(char *path)
 	titlebar(path);
 
 	if (list_length == 0) {
-		statusline(ALERT, _("No entries"));
+		statusline(ALERT, "No entries");
 		napms(1200);
 	} else while (TRUE) {
 		functionptrtype function;
@@ -559,8 +559,8 @@ char *browse(char *path)
 			/* Ask for the directory to go to. */
 			if (do_prompt(MGOTODIR, "", NULL,
 							/* TRANSLATORS: This is a prompt. */
-							browser_refresh, _("Go To Directory")) < 0) {
-				statusbar(_("Cancelled"));
+							browser_refresh, "Go To Directory") < 0) {
+				statusbar("Cancelled");
 				goto testresize;
 			}
 
@@ -576,7 +576,7 @@ char *browse(char *path)
 			if (operating_dir && outside_of_confinement(path, FALSE)) {
 				/* TRANSLATORS: This refers to the confining effect of
 				 * the option --operatingdir, not of --restricted. */
-				statusline(ALERT, _("Can't go outside of %s"), operating_dir);
+				statusline(ALERT, "Can't go outside of %s", operating_dir);
 				path = mallocstrcpy(path, present_path);
 				goto testresize;
 			}
@@ -598,7 +598,7 @@ char *browse(char *path)
 
 			/* It isn't possible to move up from the root directory. */
 			if (strcmp(filelist[selected], "/..") == 0) {
-				statusline(ALERT, _("Can't move up a directory"));
+				statusline(ALERT, "Can't move up a directory");
 				continue;
 			}
 
@@ -607,13 +607,13 @@ char *browse(char *path)
 			 * directory if it's ".." or if it's a symlink to a
 			 * directory outside the operating directory. */
 			if (operating_dir && outside_of_confinement(filelist[selected], FALSE)) {
-				statusline(ALERT, _("Can't go outside of %s"), operating_dir);
+				statusline(ALERT, "Can't go outside of %s", operating_dir);
 				continue;
 			}
 #endif
 			/* If for some reason the file is inaccessible, complain. */
 			if (stat(filelist[selected], &st) < 0) {
-				statusline(ALERT, _("Error reading %s: %s"),
+				statusline(ALERT, "Error reading %s: %s",
 								filelist[selected], strerror(errno));
 				continue;
 			}
@@ -640,7 +640,7 @@ char *browse(char *path)
 		} else if (kbinput == START_OF_PASTE) {
 			while (get_kbinput(midwin, BLIND) != END_OF_PASTE)
 				;
-			statusline(AHEM, _("Paste is ignored"));
+			statusline(AHEM, "Paste is ignored");
 		} else if (kbinput == THE_WINDOW_RESIZED) {
 			;  /* Gets handled below. */
 #endif
@@ -688,7 +688,7 @@ char *browse_in(const char *inpath)
 			path = free_and_assign(path, realpath(".", NULL));
 
 			if (path == NULL) {
-				statusline(ALERT, _("The working directory has disappeared"));
+				statusline(ALERT, "The working directory has disappeared");
 				napms(1200);
 				return NULL;
 			}

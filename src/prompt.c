@@ -1,5 +1,5 @@
 /**************************************************************************
- *   prompt.c  --  This file is part of GNU nano.                         *
+ *   prompt.c  --  This file is part of gen                               *
  *                                                                        *
  *   Copyright (C) 1999-2011, 2013-2026 Free Software Foundation, Inc.    *
  *   Copyright (C) 2016, 2018, 2020-2022, 2025 Benno Schulenberg          *
@@ -659,25 +659,18 @@ int ask_user(bool withall, const char *question)
 {
 	int choice = UNDECIDED;
 	int width = 16;
-	/* TRANSLATORS: For the next three strings, specify the starting letters
-	 * of the translations for "Yes"/"No"/"All".  The first letter of each of
-	 * these strings MUST be a single-byte letter; others may be multi-byte. */
-	const char *yesstr = _("Yy");
-	const char *nostr = _("Nn");
-	const char *allstr = _("Aa");
+	const char *yesstr = "Yy";
+	const char *nostr = "Nn";
+	const char *allstr = "Aa";
 	const keystruct *shortcut;
 	functionptrtype function;
 
 	while (choice == UNDECIDED) {
-#ifdef ENABLE_NLS
-		char letter[MAXCHARLEN + 1];
-		int index = 0;
-#endif
 		int kbinput;
 
 		if (!ISSET(NO_HELP)) {
 			char shortstr[MAXCHARLEN + 2];
-				/* Temporary string for (translated) " Y", " N" and " A". */
+				/* Temporary string for " Y", " N" and " A". */
 			const keystruct *cancelshortcut = first_sc_for(MYESNO, do_cancel);
 				/* The keystroke that is bound to the Cancel function. */
 
@@ -690,20 +683,20 @@ int ask_user(bool withall, const char *question)
 			/* Now show the ones for "Yes", "No", "Cancel" and maybe "All". */
 			sprintf(shortstr, " %c", yesstr[0]);
 			wmove(footwin, 1, 0);
-			post_one_key(shortstr, _("Yes"), width);
+			post_one_key(shortstr, "Yes", width);
 
 			shortstr[1] = nostr[0];
 			wmove(footwin, 2, 0);
-			post_one_key(shortstr, _("No"), width);
+			post_one_key(shortstr, "No", width);
 
 			if (withall) {
 				shortstr[1] = allstr[0];
 				wmove(footwin, 1, width);
-				post_one_key(shortstr, _("All"), width);
+				post_one_key(shortstr, "All", width);
 			}
 
 			wmove(footwin, 2, width);
-			post_one_key(cancelshortcut->keystr, _("Cancel"), width);
+			post_one_key(cancelshortcut->keystr, "Cancel", width);
 		}
 
 		/* Color the prompt bar over its full width and display the question. */
@@ -730,29 +723,6 @@ int ask_user(bool withall, const char *question)
 		}
 #endif
 
-#ifdef ENABLE_NLS
-		letter[index++] = (unsigned char)kbinput;
-#ifdef ENABLE_UTF8
-		/* If the received code is a UTF-8 starter byte, get also the
-		 * continuation bytes and assemble them into one letter. */
-		if (0xC0 <= kbinput && kbinput <= 0xF7 && using_utf8) {
-			int extras = (kbinput / 16) % 4 + (kbinput <= 0xCF ? 1 : 0);
-
-			while (extras <= waiting_keycodes() && extras-- > 0)
-				letter[index++] = (unsigned char)get_kbinput(footwin, !withall);
-		}
-#endif
-		letter[index] = '\0';
-
-		/* See if the typed letter is in the Yes, No, or All strings. */
-		if (strstr(yesstr, letter))
-			choice = YES;
-		else if (strstr(nostr, letter))
-			choice = NO;
-		else if (withall && strstr(allstr, letter))
-			choice = ALL;
-		else
-#endif /* ENABLE_NLS */
 		if (strchr("Yy", kbinput))
 			choice = YES;
 		else if (strchr("Nn", kbinput))

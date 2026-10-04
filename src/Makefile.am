@@ -1,4 +1,6 @@
-AM_CPPFLAGS = -DLOCALEDIR=\"$(localedir)\" -DSYSCONFDIR=\"$(sysconfdir)\" \
+// Path: ~/nano/src/Makefile.am
+
+AM_CPPFLAGS = -DSYSCONFDIR=\"$(sysconfdir)\" \
 	-I$(top_builddir)/lib -I$(top_srcdir)/lib
 
 CLEANFILES = revision.h
@@ -42,7 +44,7 @@ gen_SOURCES = \
 		utils.c \
 		winio.c
 
-gen_LDADD = $(top_builddir)/lib/libgnu.a @LIBINTL@ \
+gen_LDADD = $(top_builddir)/lib/libgnu.a \
 		$(GETRANDOM_LIB) $(CLOCK_TIME_LIB) $(LIBTHREAD)
 
 install-exec-hook:

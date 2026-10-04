@@ -90,17 +90,17 @@ void record_macro(void)
 		previous_length = macro_length;
 		macro_buffer = NULL;
 		macro_length = 0;
-		statusline(REMARK, _("Recording a macro..."));
+		statusline(REMARK, "Recording a macro...");
 	} else if (milestone == 0) {
 		free(macro_buffer);
 		macro_buffer = previous_macro;
 		macro_length = previous_length;
-		statusline(REMARK, _("Cancelled"));
+		statusline(REMARK, "Cancelled");
 	} else {
 		free(previous_macro);
 		/* Snip the keystroke that invoked this function. */
 		macro_length = milestone;
-		statusline(REMARK, _("Stopped recording"));
+		statusline(REMARK, "Stopped recording");
 	}
 
 	if (ISSET(STATEFLAGS))
@@ -120,13 +120,13 @@ void add_to_macrobuffer(int code)
 void run_macro(void)
 {
 	if (recording) {
-		statusline(AHEM, _("Cannot run macro while recording"));
+		statusline(AHEM, "Cannot run macro while recording");
 		macro_length = milestone;
 		return;
 	}
 
 	if (macro_length == 0) {
-		statusline(AHEM, _("Macro is empty"));
+		statusline(AHEM, "Macro is empty");
 		return;
 	}
 
@@ -141,7 +141,7 @@ void run_macro(void)
 void reserve_space_for(size_t newsize)
 {
 	if (newsize < capacity)
-		die(_("Too much input at once\n"));
+		die("Too much input at once\n");
 
 	key_buffer = nrealloc(key_buffer, newsize * sizeof(int));
 	nextcodes = key_buffer;
@@ -254,7 +254,7 @@ void read_keys_from(WINDOW *frame)
 		 * check if errno is set to EIO ("Input/output error") and die in
 		 * that case, but it's not always set properly.  Argh. */
 		if (input == ERR && ++errcount == 12345678)
-			die(_("Too many errors from stdin\n"));
+			die("Too many errors from stdin\n");
 	}
 
 	curs_set(0);
@@ -1422,7 +1422,7 @@ long assemble_unicode(int symbol)
 
 		/* TRANSLATORS: This is shown while a six-digit hexadecimal
 		 * Unicode character code (%s) is being typed in. */
-		statusline(INFO, _("Unicode Input: %s"), partial);
+		statusline(INFO, "Unicode Input: %s", partial);
 	}
 
 	/* If we have an end result, reset the value and the counter. */
@@ -2036,13 +2036,13 @@ void titlebar(const char *path)
 #ifdef ENABLE_COLOR
 	if (currmenu == MLINTER) {
 		/* TRANSLATORS: The next five are "labels" in the title bar. */
-		prefix = _("Linting --");
+		prefix = "Linting --";
 		path = openfile->filename;
 	} else
 #endif
 #ifdef ENABLE_BROWSER
 	if (!inhelp && path)
-		prefix = _("DIR:");
+		prefix = "DIR:";
 	else
 #endif
 	if (!inhelp) {
@@ -2057,22 +2057,22 @@ void titlebar(const char *path)
 			upperleft = BRANDING;
 
 		if (openfile->filename[0] == '\0')
-			path = _("New Buffer");
+			path = "New Buffer";
 		else
 			path = openfile->filename;
 
 		if (ISSET(VIEW_MODE))
-			state = _("View");
+			state = "View";
 #ifndef NANO_TINY
 		else if (ISSET(STATEFLAGS))
 			state = "+.xxxxx";
 #endif
 		else if (openfile->modified)
-			state = _("Modified");
+			state = "Modified";
 		else if (ISSET(RESTRICTED))
-			state = _("Restricted");
+			state = "Restricted";
 		else
-			pluglen = breadth(_("Modified")) + 1;
+			pluglen = breadth("Modified") + 1;
 	}
 
 	/* Determine the widths of the four elements, including their padding. */
@@ -2174,7 +2174,7 @@ void minibar(void)
 		as_an_at = FALSE;
 		thename = display_string(openfile->filename, 0, COLS, FALSE, FALSE);
 	} else
-		thename = copy_of(_("(nameless)"));
+		thename = copy_of("(nameless)");
 
 	sprintf(location, "%zi,%zi", openfile->current->lineno, xplustabs() + 1);
 	placewidth = strlen(location);
@@ -2206,10 +2206,10 @@ void minibar(void)
 		char *number_of_lines = nmalloc(64);
 
 		if (openfile->fmt == NIX_FILE || openfile->fmt == UNSPECIFIED)
-			sprintf(number_of_lines, P_(" (%zu line)", " (%zu lines)", count), count);
+			sprintf(number_of_lines, (count == 1 ? " (%zu line)" : " (%zu lines)"), count);
 		else
-			sprintf(number_of_lines, P_(" (%zu line, %s)", " (%zu lines, %s)", count),
-										count, _("DOS"));
+			sprintf(number_of_lines, (count == 1 ? " (%zu line, %s)" : " (%zu lines, %s)"),
+										count, "DOS");
 		tallywidth = breadth(number_of_lines);
 		if (namewidth + tallywidth + 11 < COLS)
 			waddstr(footwin, number_of_lines);
@@ -2487,7 +2487,7 @@ void bottombars(int menu)
 		if (index + 2 >= number)
 			thiswidth += COLS % itemwidth;
 
-		post_one_key(s->keystr, _(f->tag), thiswidth);
+		post_one_key(s->keystr, f->tag, thiswidth);
 
 		index++;
 	}
@@ -3513,7 +3513,7 @@ void report_cursor_position(void)
 	charpct = (openfile->totsize == 0) ? 0 : 100 * sum / openfile->totsize;
 
 	statusline(INFO,
-			_("line %*zd/%zd (%2d%%), col %2zu/%2zu (%3d%%), char %*zu/%zu (%2d%%)"),
+			"line %*zd/%zd (%2d%%), col %2zu/%2zu (%3d%%), char %*zu/%zu (%2d%%)",
 			digits(openfile->filebot->lineno),
 			openfile->current->lineno, openfile->filebot->lineno, linepct,
 			column, fullwidth, colpct,
@@ -3667,15 +3667,15 @@ void do_credits(void)
 	};
 
 	const char *xlcredits[XLCREDIT_LEN] = {
-		N_("The nano text editor"),
-		N_("version"),
-		N_("Brought to you by:"),
-		N_("Special thanks to:"),
-		N_("The Free Software Foundation"),
-		N_("the many translators and the TP"),
-		N_("For ncurses:"),
-		N_("and anyone else we forgot..."),
-		N_("Thank you for using nano!")
+		"The nano text editor",
+		"version",
+		"Brought to you by:",
+		"Special thanks to:",
+		"The Free Software Foundation",
+		"the many translators and the TP",
+		"For ncurses:",
+		"and anyone else we forgot...",
+		"Thank you for using nano!"
 	};
 
 	if (with_interface || with_help) {
@@ -3696,7 +3696,7 @@ void do_credits(void)
 			const char *text = credits[crpos];
 
 			if (!text)
-				text = _(xlcredits[xlpos++]);
+				text = xlcredits[xlpos++];
 
 			mvwaddstr(midwin, editwinrows - 1, (COLS - breadth(text)) / 2, text);
 			wrefresh(midwin);

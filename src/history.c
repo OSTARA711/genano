@@ -235,14 +235,14 @@ bool have_statedir(void)
 			free(statepath);
 		}
 		if (mkdir(statedir, S_IRWXU) < 0) {
-			jot_error(N_("Unable to create directory %s: %s\n"
+			jot_error(("Unable to create directory %s: %s\n"
 								"It is required for saving/loading "
 								"search history or cursor positions.\n"),
 								statedir, strerror(errno));
 			return FALSE;
 		}
 	} else if (!S_ISDIR(dirinfo.st_mode)) {
-		jot_error(N_("Path %s is not a directory and needs to be.\n"
+		jot_error(("Path %s is not a directory and needs to be.\n"
 								"Nano will be unable to load or save "
 								"search history or cursor positions.\n"),
 								statedir);
@@ -261,7 +261,7 @@ void load_history(void)
 
 	/* If reading an existing file failed, don't save history when we quit. */
 	if (histories == NULL && errno != ENOENT) {
-		jot_error(N_("Error reading %s: %s"), historyname, strerror(errno));
+		jot_error("Error reading %s: %s", historyname, strerror(errno));
 		UNSET(HISTORYLOG);
 	}
 
@@ -289,7 +289,7 @@ void load_history(void)
 	}
 
 	if (fclose(histories) == EOF)
-		jot_error(N_("Error reading %s: %s"), historyname, strerror(errno));
+		jot_error("Error reading %s: %s", historyname, strerror(errno));
 
 	free(historyname);
 	free(stanza);
@@ -328,21 +328,21 @@ void save_history(void)
 	FILE *histories = fopen(historyname, "wb");
 
 	if (histories == NULL) {
-		jot_error(N_("Error writing %s: %s"), historyname, strerror(errno));
+		jot_error("Error writing %s: %s", historyname, strerror(errno));
 		free(historyname);
 		return;
 	}
 
 	/* Don't allow others to read or write the history file. */
 	if (chmod(historyname, S_IRUSR | S_IWUSR) < 0)
-		jot_error(N_("Cannot limit permissions on %s: %s"), historyname, strerror(errno));
+		jot_error("Cannot limit permissions on %s: %s", historyname, strerror(errno));
 
 	if (!write_list(searchtop, histories) || !write_list(replacetop, histories) ||
 											!write_list(executetop, histories))
-		jot_error(N_("Error writing %s: %s"), historyname, strerror(errno));
+		jot_error("Error writing %s: %s", historyname, strerror(errno));
 
 	if (fclose(histories) == EOF)
-		jot_error(N_("Error writing %s: %s"), historyname, strerror(errno));
+		jot_error("Error writing %s: %s", historyname, strerror(errno));
 
 	free(historyname);
 }
@@ -396,7 +396,7 @@ void load_positions_register(void)
 
 	/* If reading an existing file failed, don't save the register when we quit. */
 	if (registry == NULL && errno != ENOENT) {
-		jot_error(N_("Error reading %s: %s"), registername, strerror(errno));
+		jot_error("Error reading %s: %s", registername, strerror(errno));
 		UNSET(POSITIONLOG);
 	}
 
@@ -450,7 +450,7 @@ void load_positions_register(void)
 	}
 
 	if (fclose(registry) == EOF)
-		jot_error(N_("Error reading %s: %s"), registername, strerror(errno));
+		jot_error("Error reading %s: %s", registername, strerror(errno));
 
 	free(phrase);
 
@@ -467,13 +467,13 @@ void save_positions_register(void)
 	int count = 0;
 
 	if (registry == NULL) {
-		jot_error(N_("Error writing %s: %s"), registername, strerror(errno));
+		jot_error("Error writing %s: %s", registername, strerror(errno));
 		return;
 	}
 
 	/* Don't allow others to read or write the positions-register file. */
 	if (chmod(registername, S_IRUSR | S_IWUSR) < 0)
-		jot_error(N_("Cannot limit permissions on %s: %s"), registername, strerror(errno));
+		jot_error("Cannot limit permissions on %s: %s", registername, strerror(errno));
 
 	for (item = positions_register; item != NULL && count++ < 200; item = item->next) {
 		char *path_and_place;
@@ -481,7 +481,7 @@ void save_positions_register(void)
 
 		/* First write the string of line numbers with anchors, if any. */
 		if (length && fwrite(item->anchors, 1, length, registry) < length)
-			jot_error(N_("Error writing %s: %s"), registername, strerror(errno));
+			jot_error("Error writing %s: %s", registername, strerror(errno));
 
 		/* Assume 20 decimal positions each for line and column number,
 		 * plus two spaces, plus the line feed, plus the null byte. */
@@ -495,13 +495,13 @@ void save_positions_register(void)
 		path_and_place[length - 1] = '\n';
 
 		if (fwrite(path_and_place, 1, length, registry) < length)
-			jot_error(N_("Error writing %s: %s"), registername, strerror(errno));
+			jot_error("Error writing %s: %s", registername, strerror(errno));
 
 		free(path_and_place);
 	}
 
 	if (fclose(registry) == EOF)
-		jot_error(N_("Error writing %s: %s"), registername, strerror(errno));
+		jot_error("Error writing %s: %s", registername, strerror(errno));
 
 	if (stat(registername, &fileinfo) == 0)
 		latest_timestamp = fileinfo.st_mtime;

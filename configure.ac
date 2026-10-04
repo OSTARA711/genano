@@ -46,12 +46,6 @@ AC_SEARCH_LIBS([strerror], [cposix])
 AC_SYS_LARGEFILE
 PKG_PROG_PKG_CONFIG
 
-dnl Internationalization macros.
-
-AM_GNU_GETTEXT_VERSION([0.20])
-AM_GNU_GETTEXT([external], [need-ngettext])
-AM_CONDITIONAL(USE_NLS, test x$USE_NLS = xyes)
-
 dnl Data location.
 
 pkgdatadir=${datadir}/${PACKAGE}
@@ -69,7 +63,7 @@ else
 fi
 AM_CONDITIONAL(BUILDING_FROM_GIT, test x$from_git = xyes)
 
-dnl Checks for pkg-config and gettext when building from git.
+dnl Checks for pkg-config when building from git.
 
 if test x$from_git = xyes; then
 	if test ! -f $(aclocal --print-ac-dir)/pkg.m4; then
@@ -78,16 +72,11 @@ if test x$from_git = xyes; then
   *** The pkg-config package needs to be installed when building from git.
   *** After fixing this problem, rerun ./autogen.sh.])
 	fi
-	if test "$ac_cv_path_MSGFMT" = ":"; then
-		AC_MSG_ERROR([
-  *** The msgfmt program is missing.
-  *** The gettext package needs to be installed when building from git.])
-	fi
 fi
 
 dnl Checks for header files.
 
-AC_CHECK_HEADERS(libintl.h limits.h pwd.h term.h termios.h sys/param.h)
+AC_CHECK_HEADERS(limits.h pwd.h term.h termios.h sys/param.h)
 
 dnl Checks for options.
 
@@ -590,10 +579,9 @@ AM_CONDITIONAL(GROFF_HTML, test x$groff_html_support = xyes)
 AC_CONFIG_FILES([
 Makefile
 doc/Makefile
-doc/sample.nanorc
+doc/nanorc
 lib/Makefile
 m4/Makefile
-po/Makefile.in
 src/Makefile
 syntax/Makefile
 ])

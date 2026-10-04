@@ -691,7 +691,7 @@ void do_scroll_left(void)
 
 	if (ISSET(SOFTWRAP) || ISSET(SOLO_SIDESCROLL)) {
 		/* TRANSLATORS: The %s is the name of an option. */
-		statusline(AHEM, _("Not possible with '%s'"), ISSET(SOFTWRAP) ? "--softwrap" : "--solo");
+		statusline(AHEM, "Not possible with '%s'", ISSET(SOFTWRAP) ? "--softwrap" : "--solo");
 		return;
 	}
 
@@ -715,7 +715,7 @@ void do_scroll_right(void)
 	size_t frame_x;
 
 	if (ISSET(SOFTWRAP) || ISSET(SOLO_SIDESCROLL)) {
-		statusline(AHEM, _("Not possible with '%s'"), ISSET(SOFTWRAP) ? "--softwrap" : "--solo");
+		statusline(AHEM, "Not possible with '%s'", ISSET(SOFTWRAP) ? "--softwrap" : "--solo");
 		return;
 	}
 

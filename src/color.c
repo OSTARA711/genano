@@ -153,7 +153,7 @@ void find_and_prime_applicable_syntax(void)
 				break;
 
 		if (sntx == NULL && !inhelp)
-			statusline(ALERT, _("Unknown syntax name: %s"), syntaxstr);
+			statusline(ALERT, "Unknown syntax name: %s", syntaxstr);
 	}
 
 	/* If no syntax-override string was specified, or it didn't match,
@@ -193,11 +193,11 @@ void find_and_prime_applicable_syntax(void)
 #endif
 									MAGIC_ERROR);
 			if (cookie == NULL || magic_load(cookie, NULL) < 0)
-				statusline(ALERT, _("magic_load() failed: %s"), strerror(errno));
+				statusline(ALERT, "magic_load() failed: %s", strerror(errno));
 			else {
 				magicstring = magic_file(cookie, openfile->filename);
 				if (magicstring == NULL)
-					statusline(ALERT, _("magic_file(%s) failed: %s"),
+					statusline(ALERT, "magic_file(%s) failed: %s",
 								openfile->filename, magic_error(cookie));
 			}
 		}

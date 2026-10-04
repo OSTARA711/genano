@@ -42,7 +42,7 @@ bool regexp_init(const char *regexp)
 		char *str = nmalloc(len);
 
 		regerror(value, &search_regexp, str, len);
-		statusline(AHEM, _("Bad regex \"%s\": %s"), regexp, str);
+		statusline(AHEM, "Bad regex \"%s\": %s", regexp, str);
 		free(str);
 
 		return FALSE;
@@ -96,21 +96,21 @@ void search_init(bool replacing, bool retain_answer)
 					inhelp ? MFINDINHELP : (replacing ? MREPLACE : MWHEREIS),
 					retain_answer ? answer : "", &search_history, edit_refresh,
 					/* TRANSLATORS: This is the main search prompt. */
-					"%s%s%s%s%s%s", _("Search"),
+					"%s%s%s%s%s%s", "Search",
 					/* TRANSLATORS: The next four modify the search prompt. */
-					ISSET(CASE_SENSITIVE) ? _(" [Case sensitive]") : "",
-					ISSET(USE_REGEXP) ? _(" [Reg.exp.]") : "",
-					ISSET(BACKWARDS_SEARCH) ? _(" [Backwards]") : "",
+					ISSET(CASE_SENSITIVE) ? " [Case sensitive]" : "",
+					ISSET(USE_REGEXP) ? " [Reg.exp.]" : "",
+					ISSET(BACKWARDS_SEARCH) ? " [Backwards]" : "",
 					replacing ?
 #ifndef NANO_TINY
-					openfile->mark ? _(" (to replace) in selection") :
+					openfile->mark ? " (to replace) in selection" :
 #endif
-					_(" (to replace)") : "", thedefault);
+					" (to replace)" : "", thedefault);
 
 		/* If the search was cancelled, or we have a blank answer and
 		 * nothing was searched for yet during this session, get out. */
 		if (response == -1 || (response == -2 && *last_search == '\0')) {
-			statusbar(_("Cancelled"));
+			statusbar("Cancelled");
 			break;
 		}
 
@@ -230,7 +230,7 @@ int findnextstr(const char *needle, bool whole_word_only, int modus,
 		if (the_window_resized) {
 			regenerate_screen();
 			nodelay(midwin, TRUE);
-			statusbar(_("Searching..."));
+			statusbar("Searching...");
 			feedback = 1;
 		}
 #endif
@@ -254,7 +254,7 @@ int findnextstr(const char *needle, bool whole_word_only, int modus,
 			line = (ISSET(BACKWARDS_SEARCH)) ? openfile->filebot : openfile->filetop;
 
 			if (modus == JUSTFIND) {
-				statusline(REMARK, _("Search Wrapped"));
+				statusline(REMARK, "Search Wrapped");
 				/* Delay the "Searching..." message for at least two seconds. */
 				feedback = -2;
 			}
@@ -289,7 +289,7 @@ int findnextstr(const char *needle, bool whole_word_only, int modus,
 					if (the_window_resized)
 						regenerate_screen();
 #endif
-					statusbar(_("Cancelled"));
+					statusbar("Cancelled");
 					/* Clear out the key buffer (in case a macro is running). */
 					while (input != ERR)
 						input = get_input(NULL);
@@ -303,7 +303,7 @@ int findnextstr(const char *needle, bool whole_word_only, int modus,
 			if (++feedback > 0)
 				/* TRANSLATORS: This is shown when searching takes
 				 * more than half a second. */
-				statusbar(_("Searching..."));
+				statusbar("Searching...");
 		}
 	}
 
@@ -373,7 +373,7 @@ void do_research(void)
 #endif
 
 	if (*last_search == '\0') {
-		statusline(AHEM, _("No current search pattern"));
+		statusline(AHEM, "No current search pattern");
 		return;
 	}
 
@@ -412,7 +412,7 @@ void not_found_msg(const char *str)
 	char *disp = display_string(str, 0, (COLS / 2) + 1, FALSE, FALSE);
 	size_t numchars = actual_x(disp, wideness(disp, COLS / 2));
 
-	statusline(AHEM, _("\"%.*s%s\" not found"), numchars, disp,
+	statusline(AHEM, "\"%.*s%s\" not found", numchars, disp,
 						(disp[numchars] == '\0') ? "" : "...");
 	free(disp);
 }
@@ -438,7 +438,7 @@ void go_looking(void)
 	/* If we found something, and we're back at the exact same spot
 	 * where we started searching, then this is the only occurrence. */
 	if (didfind == 1 && openfile->current == was_current && openfile->current_x == was_x)
-		statusline(REMARK, _("This is the only occurrence"));
+		statusline(REMARK, "This is the only occurrence");
 	else if (didfind == 0)
 		not_found_msg(last_search);
 
@@ -598,7 +598,7 @@ ssize_t do_replace_loop(const char *needle, bool whole_word_only,
 			edit_refresh();
 
 			/* TRANSLATORS: This is a prompt. */
-			choice = ask_user(YESORALLORNO, _("Replace this instance?"));
+			choice = ask_user(YESORALLORNO, "Replace this instance?");
 
 			spotlighted = FALSE;
 
@@ -709,7 +709,7 @@ void ask_for_and_do_replacements(void)
 
 	int response = do_prompt(MREPLACEWITH, "", &replace_history,
 							/* TRANSLATORS: This is a prompt. */
-							edit_refresh, _("Replace with"));
+							edit_refresh, "Replace with");
 
 	/* Set the string to be searched, as it might have changed at the prompt. */
 	free(last_search);
@@ -723,7 +723,7 @@ void ask_for_and_do_replacements(void)
 
 	/* When cancelled, or when a function was run, we're done. */
 	if (response == -1) {
-		statusbar(_("Cancelled"));
+		statusbar("Cancelled");
 		return;
 	} else if (response > 0)
 		return;
@@ -739,8 +739,7 @@ void ask_for_and_do_replacements(void)
 	refresh_needed = TRUE;
 
 	if (numreplaced >= 0)
-		statusline(REMARK, P_("Replaced %zd occurrence",
-					"Replaced %zd occurrences", numreplaced), numreplaced);
+		statusline(REMARK, (numreplaced == 1 ? "Replaced %zd occurrence" : "Replaced %zd occurrences"), numreplaced);
 }
 
 #if !defined(NANO_TINY) || defined(ENABLE_SPELLER) || defined (ENABLE_LINTER) || defined (ENABLE_FORMATTER)
@@ -778,7 +777,7 @@ void ask_for_line_and_column(char *provided)
 	ssize_t column = openfile->placewewant + 1;
 	int response = do_prompt(MGOTOLINE, provided, NULL, edit_refresh,
 					/* TRANSLATORS: This is a prompt. */
-					_("Enter line number, column number"));
+					"Enter line number, column number");
 	int doublesign = 0;
 
 	/* When switching to Search, retain what the user typed so far. */
@@ -790,7 +789,7 @@ void ask_for_line_and_column(char *provided)
 
 	/* When cancelled or blank, or when a function was run, we're done. */
 	if (response < 0) {
-		statusbar(_("Cancelled"));
+		statusbar("Cancelled");
 		return;
 	} else if (response > 0)
 		return;
@@ -801,7 +800,7 @@ void ask_for_line_and_column(char *provided)
 
 	/* Try to extract one or two numbers from the user's response. */
 	if (!parse_line_column(answer + doublesign, &line, &column)) {
-		statusline(AHEM, _("Invalid line or column number"));
+		statusline(AHEM, "Invalid line or column number");
 		return;
 	}
 
@@ -955,7 +954,7 @@ void do_find_bracket(void)
 	ch = mbstrchr(matchbrackets, openfile->current->data + openfile->current_x);
 
 	if (ch == NULL) {
-		statusline(AHEM, _("Not a bracket"));
+		statusline(AHEM, "Not a bracket");
 		return;
 	}
 
@@ -997,7 +996,7 @@ void do_find_bracket(void)
 		}
 	}
 
-	statusline(AHEM, _("No matching bracket"));
+	statusline(AHEM, "No matching bracket");
 
 	/* Restore the cursor position. */
 	openfile->current = was_current;
@@ -1016,9 +1015,9 @@ void put_or_lift_anchor(void)
 
 	if (!ISSET(LINE_NUMBERS) && (!ISSET(MINIBAR) || ISSET(ZERO))) {
 		if (openfile->current->has_anchor)
-			statusline(REMARK, _("Placed anchor"));
+			statusline(REMARK, "Placed anchor");
 		else
-			statusline(HUSH, _("Removed anchor"));
+			statusline(HUSH, "Removed anchor");
 	}
 }
 
@@ -1037,11 +1036,11 @@ void go_to_and_confirm(linestruct *line)
 #endif
 		edit_redraw(was_current, CENTERING);
 		if (!ISSET(LINE_NUMBERS))
-			statusbar(_("Jumped to anchor"));
+			statusbar("Jumped to anchor");
 	} else if (openfile->current->has_anchor)
-		statusline(REMARK, _("This is the only anchor"));
+		statusline(REMARK, "This is the only anchor");
 	else
-		statusline(AHEM, _("There are no anchors"));
+		statusline(AHEM, "There are no anchors");
 }
 
 /* Jump to the first anchor before the current line; wrap around at the top. */
