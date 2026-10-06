@@ -1,4 +1,4 @@
-// Path: ~/nano/doc/Makefile.am
+# Path: ~/gen/doc/Makefile.am
 
 SUBDIRS =
 BUILT_SOURCES =
@@ -11,7 +11,7 @@ if USE_NANORC
 BUILT_SOURCES += nanorc
 dist_man_MANS += nanorc.5
 sysconf_DATA = nanorc
-html_pages += nanorc.5.html
+html_pages = nanorc.5.html
 endif
 
 gen.1.html: gen.1
