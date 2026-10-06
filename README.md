@@ -1,21 +1,61 @@
-          GEN, a powerfull editor, inspired by GNU nano
-          
-History
+# GEN — a powerful editor, inspired by GNU nano
 
-    Compound word *genano* means “born of nano”, with command gen.
-    This repository displays a full customisation of nano for Linux,
-    without any internationalisation (code editor is in English US).
-    
-    *gen* is an Old Welsh and Medieval Breton word associated with
-    “family, birth, origin, born of”, ultimately related to the
-    reconstructed Proto-Celtic word *genos*, “kin, family, birth”.
-    The word also naturally evokes *genesis* and *genetics*, and
-    both cognates are seemingly connected to the historically and
-    broader Indo-European root concerning birth and (re)generation.
+## History
+
+GEN is a custom fork of GNU nano, developed as part of the TARAN OS
+project. The name *genano* means “born of nano”, while the command-line
+editor is simply called `gen`.
+
+The name *gen* is associated with “family, birth, origin, born of” in
+Old Welsh and Medieval Breton, and is ultimately related to the
+reconstructed Proto-Celtic *genos*, meaning “kin, family, birth”. The
+name also naturally evokes *genesis* and *genetics*, reflecting ideas of
+origin, birth, inheritance, and regeneration.
+
+This repository contains the ongoing customisation of the GNU nano
+codebase for Linux and TARAN OS. GEN retains nano's proven terminal
+editor foundation while developing its own project identity, behaviour,
+configuration, documentation, and features.
+
+GEN is intentionally kept small and self-contained. The editor is
+designed to work in the terminal without requiring a graphical
+environment or external services.
+
+The current GEN customisation includes, among other changes:
+
+* the `gen` command and GEN project identity;
+* automatic indentation;
+* syntax highlighting;
+* NightMode and LightMode work;
+* removal of the gettext/internationalisation dependency;
+* continued ncurses-based terminal support;
+* adaptation of user-facing documentation and manual pages;
+* preservation of the existing `nanorc` configuration format where
+  practical;
+* retention of internal `NANO_*` identifiers where changing them would
+  provide no practical benefit.
+
+GEN uses English (US) for its editor interface and does not include
+internationalisation support.
+
+## Relationship to GNU nano
+
+GEN is derived from GNU nano 9.2. The original GNU nano documentation,
+history, authorship information, translation credits, and licensing
+information are preserved below as part of the project's lineage.
 
 
-    The original content of the nano README file is displayed below:
-    ---------------------------------------------------------------
+
+-------------------------------------------------------------------
+
+
+# Original GNU nano README file
+
+The following section preserves the original GNU nano README content
+from the version from which GEN was derived.
+
+The original content of the GNU nano README file is displayed below:
+-------------------------------------------------------------------
 
 
           GNU nano -- a simple editor, inspired by Pico

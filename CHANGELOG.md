@@ -1,3 +1,99 @@
+# GEN — Log of Changes
+
+Changes and customisations made to GEN after the fork from GNU nano 9.2.
+
+======================================================================
+GEN development
+======================================================================
+
+### GEN — TARAN OS text editor
+
+GEN is a custom fork of GNU nano 9.2 developed for TARAN OS. The
+upstream nano codebase is retained as the foundation, while the
+project identity, interface, build system, documentation, and editor
+behaviour are progressively adapted for GEN.
+
+#### Project identity
+
+- Renamed the user-facing editor from `nano` to `gen`.
+- Established GEN as the project name and command-line executable.
+- Updated the project identity in `configure.ac`.
+- Kept internal `NANO_*` identifiers where changing them would provide
+  no practical benefit.
+- Retained the GNU General Public License and the upstream copyright
+  history.
+- Added the GEN project description and naming convention to the
+  project documentation.
+
+#### Build system
+
+- Removed the gettext dependency and associated configuration.
+- Removed gettext initialisation from the source.
+- Updated Autoconf configuration to build GEN without gettext.
+- Fixed Autoconf macro quoting so that `autoreconf` generates a valid
+  `configure` script.
+- Verified the build with Autoconf 2.71.
+- Verified that `autoreconf -fiv`, `./configure`, and `make` complete
+  successfully.
+- Continued to use the existing gnulib and ncurses infrastructure as
+  the foundation for a small and portable build.
+
+#### Syntax highlighting
+
+- Continued development of GEN syntax highlighting.
+- Preserved the existing nano syntax framework while adapting it for
+  GEN.
+- Investigated and corrected syntax-highlighting regressions during
+  the customisation work.
+- Kept syntax definitions compatible with the existing nanorc format.
+
+#### Automatic indentation
+
+- Implemented automatic indentation behaviour in GEN.
+- Integrated the indentation changes into the existing text-editing
+  path rather than introducing a separate indentation subsystem.
+
+#### NightMode and LightMode
+
+- Began implementation of explicit NightMode and LightMode support.
+- Adapted the colour handling around ncurses colour capabilities.
+- Added configuration/build handling for the required colour support.
+- Preserved compatibility with terminals that provide different
+  levels of colour capability.
+- Avoided introducing an external theme or GUI dependency.
+
+#### Configuration and terminal support
+
+- Retained ncurses/ncursesw detection and wide-character support.
+- Retained detection for `use_default_colors()`, `set_escdelay()`,
+  `key_defined()`, and `define_key()`.
+- Retained the existing UTF-8 capability checks.
+- Retained the existing optional libmagic, formatter, linter, mouse,
+  history, browser, and other build features.
+
+#### Documentation and naming
+
+- Began adapting user-facing documentation and manual references from
+  nano to GEN where appropriate.
+- Retained historical nano references where they describe inherited
+  upstream behaviour or implementation.
+- Updated the project configuration and generated build metadata to
+  identify the program as GEN.
+
+#### Validation
+
+- Regenerated the Autotools files from `configure.ac`.
+- Confirmed that gettext is no longer used by `autoreconf`.
+- Confirmed successful generation of `configure`.
+- Confirmed successful configuration with `./configure`.
+- Confirmed successful compilation with `make -j$(nproc)`.
+
+
+
+======================================================================
+Upstream GNU nano history
+======================================================================
+
 Changes between v9.1 and v9.2:
 ------------------------------
 
