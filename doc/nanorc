@@ -254,14 +254,14 @@ set zap
 ## For all details, see 'man nanorc', section SYNTAX HIGHLIGHTING.
 
 ## To include most of the existing syntax definitions, you can do:
-include /usr/local/share/nano/*.nanorc
+include /usr/local/share/gen/*.nanorc
 
 ## Or you can select just the ones you need.  For example:
-# include /usr/local/share/nano/html.nanorc
-# include /usr/local/share/nano/python.nanorc
-# include /usr/local/share/nano/sh.nanorc
+# include /usr/local/share/gen/html.nanorc
+# include /usr/local/share/gen/python.nanorc
+# include /usr/local/share/gen/sh.nanorc
 
-## In /usr/local/share/nano/extra/ you can find some syntaxes that are
+## In /usr/local/share/gen/extra/ you can find some syntaxes that are
 ## specific for certain distros or for some less common languages.
 
 

@@ -1,4 +1,6 @@
-# Configuration for GNU nano - a small and user-friendly text editor
+# Path: ~/gen/configure.ac
+#
+# Configuration for GEN - a small and powerful text editor
 #
 # Copyright (C) 1999-2011, 2013-2026 Free Software Foundation, Inc.
 # Copyright (C) 2014, 2017 Mike Frysinger
@@ -16,7 +18,7 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see https://www.gnu.org/licenses/.
 
-AC_INIT([GNU nano], [9.2], [nano-devel@gnu.org], [nano])
+AC_INIT([GEN], [9.2], [nano-devel@gnu.org], [gen])
 AC_CONFIG_SRCDIR([src/nano.c])
 AC_CANONICAL_HOST
 AM_INIT_AUTOMAKE([1.14 foreign])
@@ -484,7 +486,7 @@ if test "x$enable_utf8" != xno && \
 	test x$ac_cv_func_iswpunct = xyes && \
 	test x$ac_cv_func_mbstowcs = xyes && \
 	test x$ac_cv_func_wctomb = xyes; then
-		AC_DEFINE(ENABLE_UTF8, 1, [Define this if your system has sufficient UTF-8 support.])
+	AC_DEFINE(ENABLE_UTF8, 1, [Define this if your system has sufficient UTF-8 support.])
 else
 	if test "x$enable_utf8" = xyes; then
 		AC_MSG_ERROR([
@@ -496,25 +498,30 @@ else
 		AC_MSG_WARN([
   *** Insufficient UTF-8 support was detected in your curses
   *** and/or C libraries.  If you want UTF-8 support, please
-  *** verify that both your curses library and your C library
+  *** verify that both your curses and your C library
   *** were built with wide-character support.])
 	fi
 fi
 
-AC_CACHE_CHECK([for enhanced regular expression flag], nano_cv_flag_reg_enhanced,
-			   [AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[#include <regex.h>]],
-												   [[
-													 #ifndef REG_ENHANCED
-													 error: No REG_ENHANCED support!
-													 #endif
-												   ]])],
-								  [nano_cv_flag_reg_enhanced=yes],
-								  [nano_cv_flag_reg_enhanced=no])])
+AC_MSG_CHECKING([for enhanced regular expression flag])
+AC_COMPILE_IFELSE(
+	[AC_LANG_PROGRAM(
+		[[#include <regex.h>]],
+		[[
+#ifndef REG_ENHANCED
+#error No REG_ENHANCED support
+#endif
+		]])],
+	[nano_reg_enhanced=yes],
+	[nano_reg_enhanced=no])
+AC_MSG_RESULT([$nano_reg_enhanced])
+
 dnl The bundled gnulib regex module doesn't support REG_ENHANCED.
 if test "$ac_use_included_regex" = "yes"; then
-	nano_cv_flag_reg_enhanced="no"
+	nano_reg_enhanced="no"
 fi
-if test "$nano_cv_flag_reg_enhanced" = "yes"; then
+
+if test "$nano_reg_enhanced" = "yes"; then
 	nano_reg_extended="REG_EXTENDED | REG_ENHANCED"
 else
 	nano_reg_extended="REG_EXTENDED"
@@ -523,35 +530,51 @@ fi
 AC_DEFINE_UNQUOTED(NANO_REG_EXTENDED, $nano_reg_extended,
 				   [Flag(s) to use to get the full range of extended regular expressions])
 
+dnl Check whether _XOPEN_SOURCE_EXTENDED is needed for color support.
+
 if test x$color_support = xyes; then
 	AC_MSG_CHECKING([whether _XOPEN_SOURCE_EXTENDED is needed])
-	AC_RUN_IFELSE([AC_LANG_SOURCE([[
+	AC_COMPILE_IFELSE(
+		[AC_LANG_PROGRAM(
+			[[
 #include <curses.h>
+			]],
+			[[
 int main(void)
 {
 	int testcolor = COLOR_WHITE;
 	return 0;
-}]])],
-	AC_MSG_RESULT(no),
-	AC_RUN_IFELSE([AC_LANG_SOURCE([[
+}
+			]])],
+		[AC_MSG_RESULT([no])],
+		[AC_COMPILE_IFELSE(
+			[AC_LANG_PROGRAM(
+				[[
 #ifndef _XOPEN_SOURCE_EXTENDED
 #define _XOPEN_SOURCE_EXTENDED 1
 #endif
 #include <curses.h>
+				]],
+				[[
 int main(void)
 {
 	int testcolor = COLOR_WHITE;
 	return 0;
-}]])],
-	AC_DEFINE(NEED_XOPEN_SOURCE_EXTENDED, 1, [Define this if you need the _XOPEN_SOURCE_EXTENDED macro for color support.])
-	AC_MSG_RESULT(yes),
-	AC_MSG_RESULT(not sure)
-	AC_MSG_WARN([
+}
+				]])],
+			[
+				AC_DEFINE([NEED_XOPEN_SOURCE_EXTENDED], [1],
+					[Define this if you need the _XOPEN_SOURCE_EXTENDED macro for color support.])
+				AC_MSG_RESULT([yes])
+			],
+			[
+				AC_MSG_RESULT([not sure])
+				AC_MSG_WARN([
   *** Couldn't successfully compile basic color test with or without
   *** _XOPEN_SOURCE_EXTENDED.  This build may not compile.  Consider
-  *** configuring with --disable-color or installing ncurses.])),
-	AC_MSG_WARN([
-  *** Can't check need for _XOPEN_SOURCE_EXTENDED when cross-compiling.]))
+  *** configuring with --disable-color or installing ncurses.])
+			])
+		])
 fi
 
 AS_IF([test "x$enable_libmagic" != "xno"], [
